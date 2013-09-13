@@ -13,7 +13,6 @@ public class RealisticChat extends JavaPlugin
 		// Minecraft packet handling
 		private RealisticChatListener realisticChatListener;
 		private RadioListener radioListener;
-		private CellListener cellListener;
 		
 		@Override
 	    public void onEnable()
@@ -32,17 +31,18 @@ public class RealisticChat extends JavaPlugin
 			
 			realisticChatListener = new RealisticChatListener();
 			radioListener = new RadioListener();
-			cellListener = new CellListener();
 
 			// Register listeners
 			getServer().getPluginManager().registerEvents(realisticChatListener, this);
 			getServer().getPluginManager().registerEvents(radioListener, this);
-			getServer().getPluginManager().registerEvents(cellListener, this);
 			
-			//TO DO: Read values from Config here
+			//Read values from Config here
+			realisticChatListener.distanceForWhispering = config.getDistanceForWhispering();
+			realisticChatListener.distanceForYelling = config.getDistanceForYelling();
+			realisticChatListener.distanceForTalking = config.getDistanceForTalking();
+			realisticChatListener.distanceForBreakingUpFactor = config.getDistanceForBreakingUpFactor();
 			
 			
-			//To-Do Ends here
 			//To-Do: Read antennas from file here
 			
 	    }
