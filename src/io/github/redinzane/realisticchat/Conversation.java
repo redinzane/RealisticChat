@@ -9,15 +9,16 @@ public class Conversation
 	LinkedList<Player> playersInConversation;
 	int playercounter;
 	boolean isConversationValid = false;
+	String disconnectMessage = "The call has disconnected.";
 	
 	public static LinkedList<Conversation> Conversations = new LinkedList<Conversation>();
 	
 	Conversation(Player caller, Player called)
 	{
 		this.caller = caller;
-		playersInConversation.add(caller);
-		playersInConversation.add(called);
-		playercounter = 2;
+		this.playersInConversation.add(caller);
+		this.playersInConversation.add(called);
+		this.playercounter = 2;
 		isConversationValid = true;
 	}
 	
@@ -28,22 +29,22 @@ public class Conversation
 	 */
 	protected boolean addPlayerToConversation(Player player)
 	{
-		if(playercounter<10)
+		if(this.playercounter<10)
 		{
-			if(playersInConversation.contains(player))
+			if(this.playersInConversation.contains(player))
 			{
 				return true;
 			}
 			else
 			{
-				playersInConversation.add(player);
-				playercounter++;
+				this.playersInConversation.add(player);
+				this.playercounter++;
 				return true;
 			}
 		}
 		else
 		{
-			if(playersInConversation.contains(player))
+			if(this.playersInConversation.contains(player))
 			{
 				return true;
 			}
@@ -57,25 +58,27 @@ public class Conversation
 	/**
 	 * Removes a player from the conversation
 	 * Check if the conversation is valid afterwards
-	 * @return value - returns false if failed reached, else true
+	 * @return value - returns false if failed, else true
 	 */
 	protected boolean removePlayerFromConversation(Player player)
 	{
 		
-		if(playersInConversation.remove(player))
+		if(this.playersInConversation.remove(player))
 		{
 			if(player.equals(caller))
 			{
-				isConversationValid = false;
+				this.isConversationValid = false;
 				playercounter--;
+				removeConversation();
 				return true;
 			}
 			else
 			{
-				playercounter--;
-				if(playercounter<2)
+				this.playercounter--;
+				if(this.playercounter<2)
 				{
-					isConversationValid = false;
+					this.isConversationValid = false;
+					removeConversation();
 				}
 				return true;
 			}
@@ -85,5 +88,28 @@ public class Conversation
 			return false;
 		}
 	}
+	
+	/**
+	 * Removes this conversation from existence, hopefully 
+	 * @return value - returns false if failed, else true
+	 */
+	protected boolean removeConversation()
+	{
+		if(Conversations.contains(this))
+		{
+			for(Player player: this.playersInConversation)
+			{
+				player.sendMessage(disconnectMessage);
+			}
+			Conversations.remove(this);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	
 
 }

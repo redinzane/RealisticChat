@@ -5,10 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.material.MaterialData;
 
 @SuppressWarnings("deprecation")
 public class RealisticChatListener implements Listener
@@ -32,12 +34,9 @@ public class RealisticChatListener implements Listener
 			double distance;
 			int length = message.length();
 			
-			if(event.getPlayer().getItemInHand().getTypeId() == 317)
+			if(event.getPlayer().getItemInHand().getType().equals(Material.getMaterial("WATCH")))
 			{
-				for(Player playerToCall: onlinePlayers)
-				{
-					
-				}
+				
 			}
 			if(length >=4 )
 			{
