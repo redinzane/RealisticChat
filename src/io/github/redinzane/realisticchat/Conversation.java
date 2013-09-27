@@ -11,7 +11,7 @@ public class Conversation
 	boolean isConversationValid = false;
 	String disconnectMessage = "The call has disconnected.";
 	
-	public static LinkedList<Conversation> Conversations = new LinkedList<Conversation>();
+	public static LinkedList<Conversation> Conversations = new LinkedList<Conversation>(); //why not an ArrayList with size MAX_PLAYERCOUNT ?
 	
 	Conversation(Player caller, Player called)
 	{
@@ -29,7 +29,7 @@ public class Conversation
 	 */
 	protected boolean addPlayerToConversation(Player player)
 	{
-		if(this.playercounter<10)
+		if(this.playercounter<10) // Hardcoded, should be in config, playersInConversation.size() would probably be enough
 		{
 			if(this.playersInConversation.contains(player))
 			{

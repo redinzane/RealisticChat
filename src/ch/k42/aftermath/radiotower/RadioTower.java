@@ -22,9 +22,9 @@ public interface RadioTower {
 
     /**
      * Getter for the Location of the tower
-     * @param location Location of the tower base block
+     * @return  Location of the tower base block
      */
-    public void getLocation(Location location);
+    public Location getLocation();
 
     /**
      * Changes the state of the RadioTower, range depends on the
@@ -70,5 +70,5 @@ public interface RadioTower {
      * set it's state to OFF
      * @return true if still valid or false
      */
-    public boolean checkValidity();
+    public boolean update();
 }
