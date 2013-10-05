@@ -13,6 +13,7 @@ public class Conversation
 	
 	public static LinkedList<Conversation> Conversations = new LinkedList<Conversation>(); //why not an ArrayList with size MAX_PLAYERCOUNT ?
 	
+	
 	Conversation(Player caller, Player called)
 	{
 		this.caller = caller;
@@ -20,6 +21,7 @@ public class Conversation
 		this.playersInConversation.add(called);
 		this.playercounter = 2;
 		isConversationValid = true;
+		Conversations.add(this);
 	}
 	
 	
@@ -108,6 +110,31 @@ public class Conversation
 		{
 			return false;
 		}
+	}
+	
+	/**
+	 * Returns an array containing all players in the conversation including the caller
+	 * @return value - returns an array of players
+	 */
+	protected Player[] getPlayersInConversation()
+	{
+		Player[] players = new Player[this.playercounter];
+		int i = 0;
+		for(Player player: this.playersInConversation)
+		{
+			players[i] = player;
+			i++;
+		}
+		return players;
+	}
+	
+	/**
+	 * Checks if player is in conversation
+	 * @return value - returns false if player is not in conversation, else true
+	 */
+	protected boolean containsPlayer(Player player)
+	{
+		return this.playersInConversation.contains(player);
 	}
 	
 	
