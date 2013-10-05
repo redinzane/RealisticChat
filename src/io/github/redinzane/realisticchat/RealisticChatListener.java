@@ -8,12 +8,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-<<<<<<< HEAD
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-=======
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
->>>>>>> Fleshing out Call beginnings
 
 @SuppressWarnings("deprecation")
 public class RealisticChatListener implements Listener
@@ -27,7 +23,7 @@ public class RealisticChatListener implements Listener
 	String message_ConversationFull = "§8Your conference call is full. You cannot add any more players.";
 	
 	@EventHandler
-	public void onAsyncPlayerChat(AsyncPlayerChatEvent event)
+	public void onPlayerChat(PlayerChatEvent event)
 	{
 		Player playerChatting = event.getPlayer();
 		String message = event.getMessage();

@@ -1,17 +1,17 @@
 package io.github.redinzane.realisticchat;
 
-import java.util.LinkedList;
+import java.util.List;
 import org.bukkit.entity.Player;
 
 public class Conversation 
 {
 	Player caller;
-	LinkedList<Player> playersInConversation;
+	List<Player> playersInConversation;
 	int playercounter;
 	boolean isConversationValid = false;
 	String disconnectMessage = "The call has disconnected.";
 	
-	public static LinkedList<Conversation> Conversations = new LinkedList<Conversation>(); //why not an ArrayList with size MAX_PLAYERCOUNT ?
+	public static List<Conversation> Conversations;
 	
 	
 	Conversation(Player caller, Player called)
@@ -31,7 +31,7 @@ public class Conversation
 	 */
 	protected boolean addPlayerToConversation(Player player)
 	{
-		if(this.playercounter<10) // Hardcoded, should be in config, playersInConversation.size() would probably be enough
+		if(this.playercounter<10)
 		{
 			if(this.playersInConversation.contains(player))
 			{
