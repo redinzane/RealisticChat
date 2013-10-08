@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class RealisticChat extends JavaPlugin 
 {
 		// Configuration
-		private RealisticChatConfiguration config;
+		protected RealisticChatConfiguration config;
 		// Minecraft packet handling
 		private RealisticChatListener realisticChatListener;
 		private RadioListener radioListener;
@@ -29,7 +29,8 @@ public class RealisticChat extends JavaPlugin
 				getLogger().info("Creating default configuration.");
 			}
 			
-			realisticChatListener = new RealisticChatListener();
+			//Always, always construct after reading the config
+			realisticChatListener = new RealisticChatListener(this);
 			radioListener = new RadioListener();
 
 			// Register listeners
@@ -37,11 +38,6 @@ public class RealisticChat extends JavaPlugin
 			getServer().getPluginManager().registerEvents(radioListener, this);
 			
 			//Read values from Config here
-			realisticChatListener.distanceForWhispering = config.getDistanceForWhispering();
-			realisticChatListener.distanceForYelling = config.getDistanceForYelling();
-			realisticChatListener.distanceForTalking = config.getDistanceForTalking();
-			realisticChatListener.distanceForBreakingUpFactor = config.getDistanceForBreakingUpFactor();
-			
 			
 			//To-Do: Read antennas from file here
 			

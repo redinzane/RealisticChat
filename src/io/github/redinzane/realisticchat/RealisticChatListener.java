@@ -10,17 +10,35 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings("deprecation")
 public class RealisticChatListener implements Listener
 {
+	//Things that should be in the config
 	int distanceForWhispering;
 	int distanceForYelling;
 	int distanceForTalking;
 	float distanceForBreakingUpFactor;
-	List<ConversationWaiter> waitingList;
 	String message_Unavailability = "§8This player is currently unavailable. Please try again later.";
 	String message_ConversationFull = "§8Your conference call is full. You cannot add any more players.";
+	String message_notOriginalCaller = "§8Only the original caller can add players to the conference call";
+	
+	List<ConversationWaiter> waitingList;
+	public Material clock;
+	RealisticChat realisticChat;
+	
+	
+	//Always, always construct after reading the config
+	RealisticChatListener(RealisticChat plugin)
+	{
+		this.realisticChat = plugin;
+		distanceForWhispering = realisticChat.config.getDistanceForWhispering();
+		distanceForYelling = realisticChat.config.getDistanceForYelling();
+		distanceForTalking = realisticChat.config.getDistanceForTalking();
+		distanceForBreakingUpFactor = realisticChat.config.getDistanceForBreakingUpFactor();
+		clock = Material.getMaterial("WATCH");
+	}
 	
 	@EventHandler
 	public void onPlayerChat(PlayerChatEvent event)
@@ -32,15 +50,15 @@ public class RealisticChatListener implements Listener
 		List<Player> playersToSendTo = new ArrayList<Player>();
 		
 		boolean isInConversation = false;
-		boolean isPlayerCaller = false;
 		boolean isAPlayerCalled = false;
 		boolean isCalledPlayerInConversation = false;
 		boolean isCalledPlayerWaitingForConversation = false;
+		
+		Conversation callersConversation = null;
 		Player playerBeingCalled = null;
-		Conversation relevantConversation;
 		
 		//Check if player is making a phonecall
-		if(playerChatting.getItemInHand().getType().equals(Material.getMaterial("WATCH")))
+		if(phoneValidator(playerChatting.getItemInHand()))
 		{
 			for(Player player: onlinePlayers)
 			{
@@ -54,6 +72,7 @@ public class RealisticChatListener implements Listener
 						if(conversation.containsPlayer(player))
 						{
 							isCalledPlayerInConversation = true;
+							callersConversation = conversation;
 						}
 					}
 						
@@ -73,7 +92,7 @@ public class RealisticChatListener implements Listener
 		{
 			for(ConversationWaiter waiter: waitingList)
 			{
-				if(waiter.playerBeingCalled == playerBeingCalled)
+				if(waiter.playerBeingCalled.equals(playerBeingCalled))
 				{
 					isCalledPlayerWaitingForConversation = true;
 				}
@@ -85,17 +104,89 @@ public class RealisticChatListener implements Listener
 		{
 			playerChatting.sendMessage(message_Unavailability);
 		}
-		
-		
+		//Else, make more checks, then call
+		else if(isAPlayerCalled)
+		{
+			//See if we are already in a conversation
+			if(isInConversation)
+			{
+				//Are we the caller?
+				if(callersConversation.caller.equals(playerChatting))
+				{
+					//Is the conversation full?
+					if(callersConversation.playercounter <= Conversation.maxPlayercount)
+					{
+						playerChatting.sendMessage(message_ConversationFull);
+					}
+					else
+					{
+						//Is the called player holding a phone?
+						if(phoneValidator(playerBeingCalled.getItemInHand()))
+						{
+							callersConversation.addPlayerToConversation(playerBeingCalled);
+						}
+						else
+						{
+							waitingList.add(new ConversationWaiter(playerChatting, playerBeingCalled));
+						}
+					}
+				}
+				else
+				{
+					playerChatting.sendMessage(message_notOriginalCaller);
+				}
+			}
+			else
+			{
+				//Is the called player holding a phone?
+				if(phoneValidator(playerBeingCalled.getItemInHand()))
+				{
+					new Conversation(playerChatting, playerBeingCalled);
+				}
+				else
+				{
+					waitingList.add(new ConversationWaiter(playerChatting, playerBeingCalled));
+				}
+			}
+		}
 		
 		
 		
 	}
 	
+	//This is it's own method so I can make an option for speciallly marked items later
+	/**
+	 * Checks if an item is a phone
+	 * @return value - returns false if not a phone, else true
+	 */
+	public boolean phoneValidator(ItemStack item)
+	{
+		if(item.getType().equals(clock))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	@EventHandler
 	public void onPlayerItemHeldChanging(PlayerItemHeldEvent event)
 	{
-		
+		Player relevantPlayer = event.getPlayer();
+		for(ConversationWaiter waiter: waitingList)
+		{
+			if(waiter.caller.equals(relevantPlayer))
+			{
+				waitingList.remove(waiter);
+			}
+			else if(waiter.playerBeingCalled.equals(relevantPlayer))
+			{
+				
+				
+			}
+		}
 	}
 	
 	

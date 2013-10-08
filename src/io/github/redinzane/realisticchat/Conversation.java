@@ -9,7 +9,13 @@ public class Conversation
 	List<Player> playersInConversation;
 	int playercounter;
 	boolean isConversationValid = false;
-	String disconnectMessage = "The call has disconnected.";
+	
+	//Things that should be in the config
+	String message_Disconnect = "The call has disconnected.";
+	String message_ConversationEstablished = "Conversation established between:";
+	String message_PlayerAdded = " has entered the conversation.";
+	String message_PlayerRemoved = " has left the conversation.";
+	static int maxPlayercount = 10;
 	
 	public static List<Conversation> Conversations;
 	
@@ -21,6 +27,9 @@ public class Conversation
 		this.playersInConversation.add(called);
 		this.playercounter = 2;
 		isConversationValid = true;
+		String establishingMessage = message_ConversationEstablished + " " + caller.getName() + " and " + called.getName();
+		caller.sendMessage(establishingMessage);
+		called.sendMessage(establishingMessage);
 		Conversations.add(this);
 	}
 	
@@ -31,7 +40,7 @@ public class Conversation
 	 */
 	protected boolean addPlayerToConversation(Player player)
 	{
-		if(this.playercounter<10)
+		if(this.playercounter < maxPlayercount)
 		{
 			if(this.playersInConversation.contains(player))
 			{
@@ -41,6 +50,10 @@ public class Conversation
 			{
 				this.playersInConversation.add(player);
 				this.playercounter++;
+				for(Player allPlayers: this.playersInConversation)
+				{
+					allPlayers.sendMessage(player.getName() + message_PlayerAdded);
+				}
 				return true;
 			}
 		}
@@ -82,6 +95,13 @@ public class Conversation
 					this.isConversationValid = false;
 					removeConversation();
 				}
+				else
+				{
+					for(Player remainingPlayer: this.playersInConversation)
+					{
+						remainingPlayer.sendMessage(player.getName() + message_PlayerRemoved);
+					}
+				}
 				return true;
 			}
 		}
@@ -101,7 +121,7 @@ public class Conversation
 		{
 			for(Player player: this.playersInConversation)
 			{
-				player.sendMessage(disconnectMessage);
+				player.sendMessage(message_Disconnect);
 			}
 			Conversations.remove(this);
 			return true;
