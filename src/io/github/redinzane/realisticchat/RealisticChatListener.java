@@ -66,7 +66,7 @@ public class RealisticChatListener implements Listener
 				{
 					isAPlayerCalled = true;
 					playerBeingCalled = player;
-					for(Conversation conversation: Conversation.Conversations)
+					for(Conversation conversation: Conversation.conversations)
 					{
 						//Check if called Player is already in a Conversation
 						if(conversation.containsPlayer(player))
@@ -80,7 +80,7 @@ public class RealisticChatListener implements Listener
 			}
 		}
 		
-		for(Conversation conversation: Conversation.Conversations)
+		for(Conversation conversation: Conversation.conversations)
 		{
 			if(conversation.containsPlayer(playerChatting))
 			{
@@ -154,40 +154,86 @@ public class RealisticChatListener implements Listener
 		
 	}
 	
-	//This is it's own method so I can make an option for speciallly marked items later
-	/**
-	 * Checks if an item is a phone
-	 * @return value - returns false if not a phone, else true
-	 */
-	public boolean phoneValidator(ItemStack item)
-	{
-		if(item.getType().equals(clock))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
 	@EventHandler
 	public void onPlayerItemHeldChanging(PlayerItemHeldEvent event)
 	{
 		Player relevantPlayer = event.getPlayer();
+		int slot = event.getNewSlot();
+		boolean conversationExists = false;
+		
 		for(ConversationWaiter waiter: waitingList)
 		{
 			if(waiter.caller.equals(relevantPlayer))
 			{
-				waitingList.remove(waiter);
+				if(phoneValidator(relevantPlayer.getInventory().getItem(slot)))
+				{
+					//Do nothing...
+				}
+				else
+				{
+					waitingList.remove(waiter);
+				}
+				break;
 			}
 			else if(waiter.playerBeingCalled.equals(relevantPlayer))
 			{
-				
+				if(phoneValidator(relevantPlayer.getInventory().getItem(slot)))
+				{
+					for(Conversation conversation: Conversation.conversations)
+					{
+						if(waiter.caller.equals(conversation.caller))
+						{
+							conversation.addPlayerToConversation(relevantPlayer);
+							waitingList.remove(waiter);
+							conversationExists = true;
+							break;
+						}
+					}
+					if(conversationExists == true)
+					{
+						break;
+					}
+					else
+					{
+						new Conversation(waiter.caller, waiter.playerBeingCalled);
+					}
+				}
+			}
+		}
+		for(Conversation conversation: Conversation.conversations)
+		{
+			if(conversation.containsPlayer(relevantPlayer))
+			{
+				if(phoneValidator(relevantPlayer.getInventory().getItem(slot)))
+				{
+					//Do nothing
+				}
+				else
+				{
+					conversation.removePlayerFromConversation(relevantPlayer);
+					break;
+				}
 				
 			}
 		}
 	}
+	
+	//This is it's own method so I can make an option for speciallly marked items later
+		/**
+		 * Checks if an item is a phone
+		 * @return value - returns false if not a phone, else true
+		 */
+		public boolean phoneValidator(ItemStack item)
+		{
+			if(item.getType().equals(clock))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	
 	
 }

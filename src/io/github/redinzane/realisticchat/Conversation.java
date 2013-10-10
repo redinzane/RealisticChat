@@ -1,13 +1,20 @@
 package io.github.redinzane.realisticchat;
 
 import java.util.List;
+
 import org.bukkit.entity.Player;
+
+/**
+ * A class representing a conversation via phone
+ * @author Moritz Schwab
+ */
 
 public class Conversation 
 {
 	Player caller;
 	List<Player> playersInConversation;
 	int playercounter;
+	long timeStarted;
 	boolean isConversationValid = false;
 	
 	//Things that should be in the config
@@ -17,20 +24,25 @@ public class Conversation
 	String message_PlayerRemoved = " has left the conversation.";
 	static int maxPlayercount = 10;
 	
-	public static List<Conversation> Conversations;
+	public static List<Conversation> conversations;
 	
-	
+	/**
+	 * Creates a Conversation and automatically adds it to the list of conversations
+	 * @param caller - the caller
+	 * @param called - the player being called
+	 */
 	Conversation(Player caller, Player called)
 	{
 		this.caller = caller;
 		this.playersInConversation.add(caller);
 		this.playersInConversation.add(called);
 		this.playercounter = 2;
+		this.timeStarted = System.currentTimeMillis();
 		isConversationValid = true;
 		String establishingMessage = message_ConversationEstablished + " " + caller.getName() + " and " + called.getName();
 		caller.sendMessage(establishingMessage);
 		called.sendMessage(establishingMessage);
-		Conversations.add(this);
+		conversations.add(this);
 	}
 	
 	
@@ -117,13 +129,13 @@ public class Conversation
 	 */
 	protected boolean removeConversation()
 	{
-		if(Conversations.contains(this))
+		if(conversations.contains(this))
 		{
 			for(Player player: this.playersInConversation)
 			{
 				player.sendMessage(message_Disconnect);
 			}
-			Conversations.remove(this);
+			conversations.remove(this);
 			return true;
 		}
 		else
