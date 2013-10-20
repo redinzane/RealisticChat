@@ -1,0 +1,8 @@
+name: RealisticChat
+main: io.github.redinzane.realisticchat.RealisticChat
+version: 0.1
+description: RealisticChat Plugin Alpha
+
+depend:
+
+permissions:

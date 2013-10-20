@@ -12,9 +12,9 @@ public class RealisticChatConfiguration
 	private static final String SECTION_FEATURES = "features";
 	
 	private static final String RADIOCOOLDOWN_KEY = "radiomessagecooldown";
+	
 	private static final String DISTANCEFROMCELLTOWER_KEY = "distancefromcelltower";
 	private static final String DISTANCEFROMRADIOTOWER_KEY = "distancefromradiotower";
-	
 	private static final String DISTANCEFORWHISPERING_KEY = "distanceforwhisperimg";
 	private static final String DISTANCEFORTALKING_KEY = "distancefortalking";
 	private static final String DISTANCEFORYELLING_KEY = "distanceforyelling";
@@ -22,13 +22,13 @@ public class RealisticChatConfiguration
 	
 	private static final String RADIO_KEY = "radio";
 	private static final String REALISTICCHAT_KEY = "realisticchat";
-	private static final String CELL_KEY = "realisticchat";
+	private static final String CELL_KEY = "cellphones";
 	
 	
 	private static final int DEFAULT_RADIOCOOLDOWN = 2000;
+	
 	private static final int DEFAULT_DISTANCEFROMCELLTOWER = 150;
 	private static final int DEFAULT_DISTANCEFROMRADIOTOWER = 150;
-	
 	private static final int DEFAULT_DISTANCEFORWHISPERING = 10;
 	private static final int DEFAULT_DISTANCEFORTALKING = 100;
 	private static final int DEFAULT_DISTANCEFORYELLING = 500;
@@ -37,6 +37,15 @@ public class RealisticChatConfiguration
 	public RealisticChatConfiguration(Configuration config) 
 	{
 		this.config = config;
+	}
+	private ConfigurationSection getSectionOrDefault(String name) 
+	{
+		ConfigurationSection section = config.getConfigurationSection(name);
+		
+		if (section != null)
+			return section;
+		else
+			return config.createSection(name);
 	}
 	
 	
@@ -246,17 +255,5 @@ public class RealisticChatConfiguration
 	{
 		getSectionOrDefault(SECTION_DISTANCES).set(DISTANCEFROMCELLTOWER_KEY, value);
 	}
-	
-	
-	private ConfigurationSection getSectionOrDefault(String name) 
-	{
-		ConfigurationSection section = config.getConfigurationSection(name);
-		
-		if (section != null)
-			return section;
-		else
-			return config.createSection(name);
-	}
-	
 	
 }
