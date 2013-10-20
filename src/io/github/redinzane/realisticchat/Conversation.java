@@ -1,5 +1,7 @@
 package io.github.redinzane.realisticchat;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -12,7 +14,7 @@ import org.bukkit.entity.Player;
 public class Conversation 
 {
 	Player caller;
-	List<Player> playersInConversation;
+	List<Player> playersInConversation = new ArrayList<Player>();
 	int playercounter;
 	long timeStarted;
 	boolean isConversationValid = false;
@@ -24,7 +26,7 @@ public class Conversation
 	String message_PlayerRemoved = " has left the conversation.";
 	static int maxPlayercount = 10;
 	
-	public static List<Conversation> conversations;
+	public static List<Conversation> conversations = new LinkedList<Conversation>();
 	
 	/**
 	 * Creates a Conversation and automatically adds it to the list of conversations
@@ -92,6 +94,7 @@ public class Conversation
 		
 		if(this.playersInConversation.remove(player))
 		{
+			player.sendMessage(RealisticChatListener.getChatColorCode(RealisticChatListener.gray) + message_Disconnect);
 			if(player.equals(caller))
 			{
 				this.isConversationValid = false;

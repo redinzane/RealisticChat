@@ -2,6 +2,7 @@ package io.github.redinzane.realisticchat;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -29,12 +30,13 @@ public class RealisticChatListener implements Listener
 	String message_Unavailability = "This player is currently unavailable. Please try again later.";
 	String message_ConversationFull = "Your conference call is full. You cannot add any more players.";
 	String message_notOriginalCaller = "Only the original caller can add players to the conference call";
-	String message_waiterIsStarting = " is calling you.";
+	String message_waiterIsStartingCalled = " is calling you.";
+	String message_waiterIsStartingCaller = "You are calling ";
 	String message_waiterHasEndedCaller = "You have ended the call.";
 	String message_waiterHasEndedCalled = "The phone has stopped ringing.";
 	String message_waiterHasEndedCalledDisconnected = " has disconnected.";
 			
-	List<ConversationWaiter> waitingList;
+	List<ConversationWaiter> waitingList = new LinkedList<ConversationWaiter>();
 	public Material clock;
 	RealisticChat realisticChat;
 	
@@ -100,25 +102,30 @@ public class RealisticChatListener implements Listener
 				{
 					isAPlayerCalled = true;
 					playerBeingCalled = player;
-					for(Conversation conversation: Conversation.conversations)
+					if(Conversation.conversations.size()>0)
 					{
-						//Check if called Player is already in a Conversation
-						if(conversation.containsPlayer(player))
+						for(Conversation conversation: Conversation.conversations)
 						{
-							isCalledPlayerInConversation = true;
+							//Check if called Player is already in a Conversation
+							if(conversation.containsPlayer(player))
+							{
+								isCalledPlayerInConversation = true;
+							}
 						}
 					}
 						
 				}
 			}
 		}
-		
-		for(Conversation conversation: Conversation.conversations)
+		if(Conversation.conversations.size()>0)
 		{
-			if(conversation.containsPlayer(playerChatting))
+			for(Conversation conversation: Conversation.conversations)
 			{
-				isInConversation = true;
-				relevantConversation = conversation;
+				if(conversation.containsPlayer(playerChatting))
+				{
+					isInConversation = true;
+					relevantConversation = conversation;
+				}
 			}
 		}
 		
@@ -132,7 +139,6 @@ public class RealisticChatListener implements Listener
 				}
 			}
 		}
-		
 		//If the called player is unavailable, inform the caller
 		if(isAPlayerCalled && (isCalledPlayerInConversation || isCalledPlayerWaitingForConversation))
 		{
@@ -161,6 +167,8 @@ public class RealisticChatListener implements Listener
 						}
 						else
 						{
+							playerChatting.sendMessage(getChatColorCode(gray) + message_waiterIsStartingCaller + playerBeingCalled.getName());
+							playerBeingCalled.sendMessage(getChatColorCode(gray) + playerChatting.getName() + message_waiterIsStartingCalled);
 							waitingList.add(new ConversationWaiter(playerChatting, playerBeingCalled));
 						}
 					}
@@ -179,6 +187,8 @@ public class RealisticChatListener implements Listener
 				}
 				else
 				{
+					playerChatting.sendMessage(getChatColorCode(gray) + message_waiterIsStartingCaller + playerBeingCalled.getName());
+					playerBeingCalled.sendMessage(getChatColorCode(gray) + playerChatting.getName() + message_waiterIsStartingCalled);
 					waitingList.add(new ConversationWaiter(playerChatting, playerBeingCalled));
 				}
 			}
@@ -342,11 +352,18 @@ public class RealisticChatListener implements Listener
 	*/
 	public boolean phoneValidator(ItemStack item)
 	{
-		if(item.getType().equals(clock))
+		try
 		{
-			return true;
+			if(item.getType().equals(clock))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
-		else
+		catch(NullPointerException e)
 		{
 			return false;
 		}
