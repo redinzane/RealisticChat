@@ -10,6 +10,8 @@ public class RealisticChatConfiguration
 	private static final String SECTION_COOLDOWNS = "cooldowns";
 	private static final String SECTION_DISTANCES = "distances";
 	private static final String SECTION_FEATURES = "features";
+	private static final String SECTION_LOREITEMS = "loreitems";
+	
 	
 	private static final String RADIOCOOLDOWN_KEY = "radiomessagecooldown";
 	
@@ -20,9 +22,12 @@ public class RealisticChatConfiguration
 	private static final String DISTANCEFORYELLING_KEY = "distanceforyelling";
 	private static final String DISTANCEFORBREAKINGUPFACTOR_KEY = "distanceforbreakingupfactor";
 	
+	private static final String LOREITEMPHONE_KEY = "phone";
+	
 	private static final String RADIO_KEY = "radio";
 	private static final String REALISTICCHAT_KEY = "realisticchat";
 	private static final String CELL_KEY = "cellphones";
+	private static final String LORE_KEY = "loreitems";
 	
 	
 	private static final int DEFAULT_RADIOCOOLDOWN = 2000;
@@ -30,9 +35,11 @@ public class RealisticChatConfiguration
 	private static final int DEFAULT_DISTANCEFROMCELLTOWER = 150;
 	private static final int DEFAULT_DISTANCEFROMRADIOTOWER = 150;
 	private static final int DEFAULT_DISTANCEFORWHISPERING = 10;
-	private static final int DEFAULT_DISTANCEFORTALKING = 100;
-	private static final int DEFAULT_DISTANCEFORYELLING = 500;
-	private static final float DEFAULT_DISTANCEFORBREAKINGUPFACTOR = 0.5f;
+	private static final int DEFAULT_DISTANCEFORTALKING = 50;
+	private static final int DEFAULT_DISTANCEFORYELLING = 1000;
+	private static final float DEFAULT_DISTANCEFORBREAKINGUPFACTOR = 0.7f;
+	
+	private static final String DEFAULT_LOREITEMPHONE = "§bPhone";
 	
 	public RealisticChatConfiguration(Configuration config) 
 	{
@@ -103,6 +110,24 @@ public class RealisticChatConfiguration
 	public void setCellBoolean(boolean value) 
 	{
 		getSectionOrDefault(SECTION_FEATURES).set(CELL_KEY, value);
+	}
+	/**
+	 * Get the feature on/off.
+	 * @return value - new value.
+	 */
+	public boolean getLoreBoolean() 
+	{
+		boolean value = getSectionOrDefault(SECTION_FEATURES).getBoolean(LORE_KEY);
+		
+		return value;
+	}
+	/**
+	 * Set the feature on/off.
+	 * @param value - new value.
+	 */
+	public void setLoreBoolean(boolean value) 
+	{
+		getSectionOrDefault(SECTION_FEATURES).set(LORE_KEY, value);
 	}
 	
 	
@@ -252,6 +277,29 @@ public class RealisticChatConfiguration
 	 * @param value - new distance.
 	 */
 	public void setDistanceFromCellTower(int value) 
+	{
+		getSectionOrDefault(SECTION_DISTANCES).set(DISTANCEFROMCELLTOWER_KEY, value);
+	}
+	
+	//Lore settings
+	/**
+	 * Retrieve the lore item name.
+	 * @return Distance in milliseconds.
+	 */
+	public String getLoreItemPhone() 
+	{
+		String value = getSectionOrDefault(SECTION_LOREITEMS).getString(LOREITEMPHONE_KEY);
+
+		if (value == null)
+			return DEFAULT_LOREITEMPHONE;
+		else
+			return (value);
+	}
+	/**
+	 * Set the lore item name.
+	 * @param value - new distance.
+	 */
+	public void setLoreItemPhone(String value) 
 	{
 		getSectionOrDefault(SECTION_DISTANCES).set(DISTANCEFROMCELLTOWER_KEY, value);
 	}

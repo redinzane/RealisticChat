@@ -4,11 +4,14 @@ distances:
   distancefromcelltower: 150
   distancefromradiotower: 150
   distanceforwhisperimg: 10
-  distancefortalking: 100
-  distanceforyelling: 500
-  distanceforbreakingupfactor: 0.5
+  distancefortalking: 50
+  distanceforyelling: 1000
+  distanceforbreakingupfactor: 0.7
 features:
   radio: true
   realisticchat: true
   cellphones: true
+  loreitems: false
+loreitemname:
+  phone: §bPhone
   
