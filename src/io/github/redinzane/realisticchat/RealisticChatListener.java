@@ -86,7 +86,7 @@ public class RealisticChatListener implements Listener
 		isRealisticChatOn = realisticChat.config.getChatBoolean();
 		isCellOn = realisticChat.config.getCellBoolean();
 		isLoreOn = realisticChat.config.getLoreBoolean();
-		loreItemName_Phone = realisticChat.config.getLoreItemPhone();
+		loreItemName_Phone = ChatColor.translateAlternateColorCodes('&', realisticChat.config.getLoreItemPhone());
 	}
 	
 	@EventHandler
