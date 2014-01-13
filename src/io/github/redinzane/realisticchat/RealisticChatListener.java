@@ -169,7 +169,7 @@ public class RealisticChatListener implements Listener
 					if(relevantConversation.caller.equals(playerChatting))
 					{
 						//Is the conversation full?
-						if(relevantConversation.playercounter <= Conversation.maxPlayercount)
+						if(relevantConversation.playercounter >= Conversation.maxPlayercount)
 						{
 							playerChatting.sendMessage(getChatColorCode(gray) + message_ConversationFull);
 						}
@@ -213,7 +213,14 @@ public class RealisticChatListener implements Listener
 			{
 				for(Player player: relevantConversation.getPlayersInConversation())
 				{
-					playersToSendToPhonecall.add(player);
+					if(player == playerChatting)
+					{
+						//Do nothing...
+					}
+					else
+					{
+						playersToSendToPhonecall.add(player);
+					}
 				}
 				for(Player player: playersToSendToPhonecall)
 				{
@@ -419,6 +426,7 @@ public class RealisticChatListener implements Listener
 					else
 					{
 						new Conversation(waiter.caller, waiter.playerBeingCalled);
+						waitingList.remove(waiter);
 					}
 				}
 			}

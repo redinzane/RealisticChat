@@ -24,7 +24,7 @@ public class Conversation
 	String message_ConversationEstablished = "Conversation established between:";
 	String message_PlayerAdded = " has entered the conversation.";
 	String message_PlayerRemoved = " has left the conversation.";
-	static int maxPlayercount = 10;
+	final static int maxPlayercount = 10;
 	
 	public static List<Conversation> conversations = new LinkedList<Conversation>();
 	
