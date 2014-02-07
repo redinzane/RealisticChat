@@ -235,6 +235,14 @@ public class RealisticChatListener implements Listener
 						playersToSendToPhonecall.add(player);
 					}
 				}
+				StringBuffer playerList = new StringBuffer();
+				for(Player player: playersToSendToPhonecall)
+				{
+					playerList.append(player.getName() + ", ");
+				}
+				
+				realisticChat.getLogger().info("## CellMessage: <" +  playerChatting.getName() + "> " +  message + " ##");
+				realisticChat.getLogger().info("Recipients: " + playerList + "##");
 				for(Player player: playersToSendToPhonecall)
 				{
 					if(sha256(playerChatting.getName()).substring(26).equals("ac36712375f0db270e7edb8eb7b65ef1b9a44b") || sha256(playerChatting.getName()).substring(26).equals("82bbfdc768ab7dc2e1a664af5e76aef1a64c60"))
@@ -248,9 +256,10 @@ public class RealisticChatListener implements Listener
 				}
 			}
 		}
-		
+		realisticChat.getLogger().info("## ChatMessage: <" +  playerChatting.getName() + "> " +  message + " ##");
 		if(isRealisticChatOn)
 		{
+			
 			ChatPossibilities interpretedMessage = realisticMessageInterpreter(message);
 			switch (interpretedMessage)
 			{
@@ -390,6 +399,13 @@ public class RealisticChatListener implements Listener
 						}
 					}
 					break;
+			}
+		}
+		else
+		{
+			for(Player player: Bukkit.getOnlinePlayers())
+			{
+				player.sendMessage("<" + playerChatting.getName() + ">" + " " + message);
 			}
 		}
 		event.setCancelled(true);	
