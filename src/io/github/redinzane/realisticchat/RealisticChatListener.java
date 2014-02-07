@@ -75,6 +75,19 @@ public class RealisticChatListener implements Listener
 		yelling1, yelling2, yelling3, yelling4, normalTalking, whispering
 	}
 	
+	private class ConversationWaiter
+	{
+		public Player caller;
+		public Player playerBeingCalled;
+		
+		ConversationWaiter(Player caller, Player playerBeingCalled)
+		{
+			this.caller = caller;
+			this.playerBeingCalled = playerBeingCalled;
+		}
+	}
+
+	
 	//Always, always construct after reading the config
 	RealisticChatListener(RealisticChat plugin)
 	{

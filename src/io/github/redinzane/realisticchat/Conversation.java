@@ -1,20 +1,18 @@
 package io.github.redinzane.realisticchat;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.bukkit.entity.Player;
 
 /**
  * A class representing a conversation via phone
- * @author Moritz Schwab
+ * 
  */
 
 public class Conversation 
 {
 	Player caller;
-	List<Player> playersInConversation = new ArrayList<Player>();
+	LinkedList<Player> playersInConversation = new LinkedList<Player>();
 	int playercounter;
 	long timeStarted;
 	boolean isConversationValid = false;
@@ -26,7 +24,7 @@ public class Conversation
 	String message_PlayerRemoved = " has left the conversation.";
 	final static int maxPlayercount = 10;
 	
-	public static List<Conversation> conversations = new LinkedList<Conversation>();
+	public static LinkedList<Conversation> conversations = new LinkedList<Conversation>();
 	
 	/**
 	 * Creates a Conversation and automatically adds it to the list of conversations
