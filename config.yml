@@ -1,5 +1,5 @@
 cooldowns:
-  radiomessagecooldown: 2000
+  radiomessagecooldown: 7
 distances:
   distancefromcelltower: 150
   distancefromradiotower: 150
@@ -13,5 +13,6 @@ features:
   cellphones: true
   loreitems: false
 loreitemname:
-  phone: §bPhone
+  phone: ï¿½bPhone
+  radio: Radio
   

@@ -11,6 +11,12 @@ public class RealisticChatConfiguration
 	private static final String SECTION_DISTANCES = "distances";
 	private static final String SECTION_FEATURES = "features";
 	private static final String SECTION_LOREITEMS = "loreitems";
+    private static final String SECTION_RADIOTOWER = "radiotower";
+
+    private static final String RT_MINHEIGHT_KEY = "minimumHeight";
+    private static final String RT_MAXHEIGHT_KEY = "maximumHeight";
+    private static final String RT_MAXRANGE_KEY  = "maximumRange";
+    private static final String RT_CUTOFFRANGE_KEY  = "cutoffRange";
 	
 	
 	private static final String RADIOCOOLDOWN_KEY = "radiomessagecooldown";
@@ -23,6 +29,7 @@ public class RealisticChatConfiguration
 	private static final String DISTANCEFORBREAKINGUPFACTOR_KEY = "distanceforbreakingupfactor";
 	
 	private static final String LOREITEMPHONE_KEY = "phone";
+    private static final String LOREITEMRADIO_KEY = "radio";
 	
 	private static final String RADIO_KEY = "radio";
 	private static final String REALISTICCHAT_KEY = "realisticchat";
@@ -38,8 +45,15 @@ public class RealisticChatConfiguration
 	private static final int DEFAULT_DISTANCEFORTALKING = 50;
 	private static final int DEFAULT_DISTANCEFORYELLING = 1000;
 	private static final float DEFAULT_DISTANCEFORBREAKINGUPFACTOR = 0.7f;
+
+    public static final int DEFAULT_RT_MIN_HEIGHT = 6;
+    public static final int DEFAULT_RT_MAX_HEIGHT = 50;
+    public static final int DEFAULT_RT_MAX_RANGE = 10000;
+    public static final double DEFAULT_RT_CUTOFFRANGE = 0.3;
 	
-	private static final String DEFAULT_LOREITEMPHONE = "§bPhone";
+	private static final String DEFAULT_LOREITEMPHONE = "ï¿½bPhone";
+
+    private static final String DEFAULT_LOREITEMRADIO = "ï¿½bRadio";
 	
 	public RealisticChatConfiguration(Configuration config) 
 	{
@@ -301,7 +315,62 @@ public class RealisticChatConfiguration
 	 */
 	public void setLoreItemPhone(String value) 
 	{
-		getSectionOrDefault(SECTION_DISTANCES).set(DISTANCEFROMCELLTOWER_KEY, value);
+		getSectionOrDefault(SECTION_DISTANCES).set(DISTANCEFROMCELLTOWER_KEY, value); //FIXME copy paste error?
 	}
-	
+
+    //Lore settings
+    /**
+     * Retrieve the lore item name.
+     * @return Distance in milliseconds.
+     */
+    public String getLoreItemRadio()
+    {
+        String value = getSectionOrDefault(SECTION_LOREITEMS).getString(LOREITEMRADIO_KEY);
+
+        if (value == null)
+            return DEFAULT_LOREITEMRADIO;
+        else
+            return (value);
+    }
+    /**
+     * Set the lore item name.
+     * @param value - new distance.
+     */
+    public void setLoreItemRadio(String value)
+    {
+        getSectionOrDefault(SECTION_LOREITEMS).set(LOREITEMRADIO_KEY, value);
+    }
+	//==== Radio Tower Settings
+    public int getRTMinHeight(){
+        int value = getSectionOrDefault(SECTION_RADIOTOWER).getInt(RT_MINHEIGHT_KEY);
+
+        if (value < 0)
+            return DEFAULT_RT_MIN_HEIGHT;
+        else
+            return (value);
+    }
+    public int getRTMaxHeight(){
+        int value = getSectionOrDefault(SECTION_RADIOTOWER).getInt(RT_MAXHEIGHT_KEY);
+
+        if (value < 0)
+            return DEFAULT_RT_MAX_HEIGHT;
+        else
+            return (value);
+    }
+    public int getRTMaxRange(){
+        int value = getSectionOrDefault(SECTION_RADIOTOWER).getInt(RT_MAXRANGE_KEY);
+
+        if (value < 0)
+            return DEFAULT_RT_MAX_RANGE;
+        else
+            return (value);
+    }
+    public double getRTCutoffRange(){
+        double value = getSectionOrDefault(SECTION_RADIOTOWER).getDouble(RT_CUTOFFRANGE_KEY);
+
+        if (value < 0)
+            return DEFAULT_RT_CUTOFFRANGE;
+        else
+            return (value);
+    }
 }

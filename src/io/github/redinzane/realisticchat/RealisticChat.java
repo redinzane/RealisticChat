@@ -1,9 +1,13 @@
 package io.github.redinzane.realisticchat;
 
 import java.io.File;
+import java.util.logging.Level;
 
+import ch.k42.aftermath.radiotower.RadioTower;
+import ch.k42.aftermath.radiotower.RadioTowerManager;
 import io.github.redinzane.realisticchat.RealisticChatConfiguration;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class RealisticChat extends JavaPlugin 
@@ -12,15 +16,14 @@ public class RealisticChat extends JavaPlugin
 		protected RealisticChatConfiguration config;
 		// Minecraft packet handling
 		private RealisticChatListener realisticChatListener;
-		private RadioListener radioListener;
+		private RadioTuningListener radioListener;
 		
 		@Override
 	    public void onEnable()
 		{
 			//Creates a Config
 			config = new RealisticChatConfiguration(getConfig());
-			
-			if (!hasConfig()) {
+            if (!hasConfig()) {
 				getConfig().options().copyDefaults(true);
 				saveConfig();
 				
@@ -31,19 +34,31 @@ public class RealisticChat extends JavaPlugin
 			
 			//Always, always construct after reading the config
 			realisticChatListener = new RealisticChatListener(this);
-			radioListener = new RadioListener();
+			radioListener = new RadioTuningListener(config.getLoreItemRadio(),this);
 
 			// Register listeners
 			getServer().getPluginManager().registerEvents(realisticChatListener, this);
-			getServer().getPluginManager().registerEvents(radioListener, this);
+
+
+            // All radio stuff
+            if(config.getRadioBoolean()){
+                RadioTower.setParameters(config.getRTMinHeight(),config.getRTMaxHeight(),config.getRTMaxRange(),config.getRTCutoffRange());
+                getLogger().info("enabling RadioTowers");
+                RadioTowerManager rtm = new RadioTowerManager(this);
+                getServer().getPluginManager().registerEvents(radioListener, this);
+                getServer().getPluginManager().registerEvents(rtm, this);
+                long time = 20L*config.getRadioCooldown();
+                getServer().getScheduler().scheduleSyncRepeatingTask(this,rtm,100L ,time);
+            }
+
 			
 			//Read values from Config here
 			
 			//To-Do: Read antennas from file here
 			
 	    }
-	 
-	    @Override
+
+    @Override
 	    public void onDisable()
 	    {
 	    	
