@@ -15,8 +15,9 @@ features:
 loreitems:
   phone: �bPhone
   radio: Radio
+
 radiotower:
-  minimumHeight: 6
-  maximumHeight: 40
-  maximumRange: 5000
-  cutoffRange: 0.3
+  minimumHeight: 6      # minimum height of the antenna to be valid (but no range)
+  maximumHeight: 40     # maximum height of the antenna, higher antennas won't help increase range
+  maximumRange: 5000    # maximum range that can be achieved with this antenna if it's height is maximumHeight
+  cutoffRange: 0.3      # after cutoffRange*range the signal will attenuate

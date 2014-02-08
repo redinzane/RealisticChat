@@ -1,6 +1,7 @@
 package ch.k42.aftermath.radiotower;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
@@ -54,7 +55,9 @@ public class RadioTower{
         this.WORLD_HEIGHT = location.getWorld().getMaxHeight();
         this.plugin = plugin;
         this.nominalRange = MAX_RANGE;
-        update();
+        if(update()){
+            location.getWorld().playEffect(location, Effect.MOBSPAWNER_FLAMES,0);
+        }
     }
 
     public void broadcastMessage() {
