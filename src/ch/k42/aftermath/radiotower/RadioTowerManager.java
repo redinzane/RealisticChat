@@ -10,15 +10,14 @@ import org.bukkit.material.RedstoneTorch;
 import org.bukkit.material.Sign;
 import org.bukkit.plugin.Plugin;
 
-import java.util.Collections;
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Thomas on 07.02.14.
  */
 public class RadioTowerManager implements Listener, Runnable {
-    private Set<RadioTower> towers = Collections.newSetFromMap(new ConcurrentHashMap<RadioTower, Boolean>());
+    private Map<Location,RadioTower> towers = new ConcurrentHashMap<Location, RadioTower>();
     private Plugin plugin;
 
     public RadioTowerManager(Plugin plugin) {
@@ -26,8 +25,10 @@ public class RadioTowerManager implements Listener, Runnable {
     }
 
     public void registerTower(Location location){
+        if(towers.containsKey(location)) return;
+
         if(RadioTower.validate(location)){
-            towers.add(new RadioTower(plugin,location));
+            towers.put(location, new RadioTower(plugin, location));
             plugin.getLogger().fine("new tower registered");
         }
     }
@@ -73,7 +74,7 @@ public class RadioTowerManager implements Listener, Runnable {
         plugin.getLogger().fine("Broadcasting at " + towers.size() + " towers");
         plugin.getLogger().fine("Receivers: " + RadioMessageEvent.getHandlerList().getRegisteredListeners().length);
 
-        for(RadioTower tower : towers){
+        for(RadioTower tower : towers.values()){
             if(tower.update()){ // tower still valid?
                 tower.broadcastMessage();
             }else {
