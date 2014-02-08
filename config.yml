@@ -12,7 +12,11 @@ features:
   realisticchat: true
   cellphones: true
   loreitems: false
-loreitemname:
+loreitems:
   phone: �bPhone
   radio: Radio
-  
+radiotower:
+  minimumHeight: 6
+  maximumHeight: 40
+  maximumRange: 5000
+  cutoffRange: 0.3
