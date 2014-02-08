@@ -1,6 +1,5 @@
 package ch.k42.aftermath.radiotower;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.util.Random;
@@ -31,7 +30,7 @@ public class Minions {
     /**
      * Obfuscates a message depending on a scale
      * @param message message to obfuscate
-     * @param scale a scale from 0 (nearly no obfusctaion) to 1 (nearly fully obfuscated), higher values are possible
+     * @param scale a scale from 0 (nearly no obfuscation) to 1 (nearly fully obfuscated), higher values are possible
      * @return an obfuscated message
      */
     public static final String obfuscateMessage(String message,double scale){

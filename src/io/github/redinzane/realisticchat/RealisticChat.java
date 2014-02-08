@@ -1,13 +1,12 @@
 package io.github.redinzane.realisticchat;
 
 import java.io.File;
-import java.util.logging.Level;
 
 import ch.k42.aftermath.radiotower.RadioTower;
 import ch.k42.aftermath.radiotower.RadioTowerManager;
 import io.github.redinzane.realisticchat.RealisticChatConfiguration;
 
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class RealisticChat extends JavaPlugin 
@@ -23,7 +22,8 @@ public class RealisticChat extends JavaPlugin
 		{
 			//Creates a Config
 			config = new RealisticChatConfiguration(getConfig());
-            if (!hasConfig()) {
+            if (!hasConfig()) 
+            {
 				getConfig().options().copyDefaults(true);
 				saveConfig();
 				
@@ -32,9 +32,17 @@ public class RealisticChat extends JavaPlugin
 				getLogger().info("Creating default configuration.");
 			}
 			
-			//Always, always construct after reading the config
 			realisticChatListener = new RealisticChatListener(this);
-			radioListener = new RadioTuningListener(config.getLoreItemRadio(),this);
+			realisticChatListener.distanceForWhispering = config.getDistanceForWhispering();
+			realisticChatListener.distanceForYelling = config.getDistanceForYelling();
+			realisticChatListener.distanceForTalking = config.getDistanceForTalking();
+			realisticChatListener.distanceForBreakingUpFactor = config.getDistanceForBreakingUpFactor();
+			realisticChatListener.isRealisticChatOn = config.getChatBoolean();
+			realisticChatListener.isCellOn = config.getCellBoolean();
+			realisticChatListener.isLoreOn = config.getLoreBoolean();
+			realisticChatListener.loreItemName_Phone = ChatColor.translateAlternateColorCodes('&', config.getLoreItemPhone());
+			
+			radioListener = new RadioTuningListener(ChatColor.translateAlternateColorCodes('&', config.getLoreItemRadio()),this);
 
 			// Register listeners
 			getServer().getPluginManager().registerEvents(realisticChatListener, this);

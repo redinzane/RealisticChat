@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,6 +17,8 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 //import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+
+import ch.k42.aftermath.radiotower.Minions;
 
 @SuppressWarnings("deprecation")
 public class RealisticChatListener implements Listener
@@ -92,14 +93,6 @@ public class RealisticChatListener implements Listener
 	RealisticChatListener(RealisticChat plugin)
 	{
 		this.realisticChat = plugin;
-		distanceForWhispering = realisticChat.config.getDistanceForWhispering();
-		distanceForYelling = realisticChat.config.getDistanceForYelling();
-		distanceForTalking = realisticChat.config.getDistanceForTalking();
-		distanceForBreakingUpFactor = realisticChat.config.getDistanceForBreakingUpFactor();
-		isRealisticChatOn = realisticChat.config.getChatBoolean();
-		isCellOn = realisticChat.config.getCellBoolean();
-		isLoreOn = realisticChat.config.getLoreBoolean();
-		loreItemName_Phone = ChatColor.translateAlternateColorCodes('&', realisticChat.config.getLoreItemPhone());
 	}
 	
 	@EventHandler
@@ -275,7 +268,7 @@ public class RealisticChatListener implements Listener
 							}
 							else if(distance < distanceForTalking)
 							{
-								player.sendMessage("<" + playerChatting.getName() + ">" + " " + messageScrambler(message, chanceToScramble));
+								player.sendMessage("<" + playerChatting.getName() + ">" + " " + Minions.obfuscateMessage(message, (distance - (distanceForTalking * distanceForBreakingUpFactor))/(distanceForTalking - (distanceForTalking * distanceForBreakingUpFactor))));
 							}
 						}
 						catch (IllegalArgumentException  e)
@@ -297,7 +290,7 @@ public class RealisticChatListener implements Listener
 							}
 							else if(distance < distanceForTalking)
 							{
-								player.sendMessage("<" + playerChatting.getName() + ">" + " " + messageScrambler(message, chanceToScramble));
+								player.sendMessage("<" + playerChatting.getName() + ">" + " " + Minions.obfuscateMessage(message, (distance - (distanceForWhispering * distanceForBreakingUpFactor))/(distanceForWhispering - (distanceForWhispering * distanceForBreakingUpFactor))));
 							}
 						}
 						catch (IllegalArgumentException  e)
@@ -321,7 +314,7 @@ public class RealisticChatListener implements Listener
 							}
 							else if(distance < distanceForTalking)
 							{
-								player.sendMessage("<" + playerChatting.getName() + ">" + " " + messageScrambler(message, chanceToScramble));
+								player.sendMessage("<" + playerChatting.getName() + ">" + " " + Minions.obfuscateMessage(message, (distance - (distanceForYelling * distanceForBreakingUpFactor))/(distanceForYelling - (distanceForYelling * distanceForBreakingUpFactor))));
 							}
 						}
 						catch (IllegalArgumentException  e)
@@ -344,7 +337,7 @@ public class RealisticChatListener implements Listener
 							}
 							else if(distance < distanceForTalking)
 							{
-								player.sendMessage("<" + playerChatting.getName() + ">" + " " + messageScrambler(message, chanceToScramble));
+								player.sendMessage("<" + playerChatting.getName() + ">" + " " + Minions.obfuscateMessage(message, (distance - ((distanceForYelling/2) * distanceForBreakingUpFactor))/((distanceForYelling/2) - ((distanceForYelling/2) * distanceForBreakingUpFactor))));
 							}
 						}
 						catch (IllegalArgumentException  e)
@@ -367,7 +360,7 @@ public class RealisticChatListener implements Listener
 							}
 							else if(distance < distanceForTalking)
 							{
-								player.sendMessage("<" + playerChatting.getName() + ">" + " " + messageScrambler(message, chanceToScramble));
+								player.sendMessage("<" + playerChatting.getName() + ">" + " " + Minions.obfuscateMessage(message, (distance - ((distanceForYelling/4) * distanceForBreakingUpFactor))/((distanceForYelling/4) - ((distanceForYelling/4) * distanceForBreakingUpFactor))));
 							}
 						}
 						catch (IllegalArgumentException  e)
@@ -390,7 +383,7 @@ public class RealisticChatListener implements Listener
 							}
 							else if(distance < distanceForTalking)
 							{
-								player.sendMessage("<" + playerChatting.getName() + ">" + " " + messageScrambler(message, chanceToScramble));
+								player.sendMessage("<" + playerChatting.getName() + ">" + " " + Minions.obfuscateMessage(message, (distance - ((distanceForYelling/8) * distanceForBreakingUpFactor))/((distanceForYelling/8) - ((distanceForYelling/8) * distanceForBreakingUpFactor))));
 							}
 						}
 						catch (IllegalArgumentException  e)
@@ -623,67 +616,6 @@ public class RealisticChatListener implements Listener
 		{
 			return ChatPossibilities.normalTalking;
 		}
-	}
-	
-	/**
-	* Scrambles a message with the given chance per character
-	* @param message - the string to be scrambled
-	* @param scrambleChance - the chance that a character is scrambled, it should be between 0 and 1
-	* @return scrambled message - the scrambled message
-	*/
-	private String messageScrambler(String message, float scrambleChance)
-	{
-		StringBuffer buffer = new StringBuffer();
-		Random random = new Random();
-		if(scrambleChance == 0f)
-		{
-			
-		}
-		else if(scrambleChance == 1f)
-		{
-			
-		}
-		else
-		{
-			scrambleChance = scrambleChance % 1;
-		}
-		
-		char[] charArray = message.toCharArray();
-		for(char character: charArray)
-		{
-			if(random.nextFloat() <= scrambleChance)
-			{
-				int scrambleDeterminator = random.nextInt(5);
-				switch (scrambleDeterminator)
-				{
-					case 0:
-						buffer.append(getChatColorCode(obfuscated) + character + getChatColorCode(reset));
-						break;
-					
-					case 1:
-						buffer.append(getChatColorCode(gray) + character + getChatColorCode(reset));
-						break;
-						
-					case 2:
-						buffer.append(getChatColorCode(darkGray) + character + getChatColorCode(reset));
-						break;
-						
-					case 3:
-						buffer.append(getChatColorCode(black) + character + getChatColorCode(reset));
-						break;
-						
-					case 4:
-						buffer.append(" ");
-						break;
-				}
-			}
-			else
-			{
-				buffer.append(character);
-			}
-		}
-		
-		return buffer.toString();
 	}
 	
 	/**
