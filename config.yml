@@ -13,8 +13,8 @@ features:
   cellphones: true
   loreitems: false
 loreitems:
-  phone: �bPhone
-  radio: Radio
+  phone: &bPhone        # Use & for color codes	
+  radio: &bRadio        # Use & for color codes
 
 radiotower:
   minimumHeight: 6      # minimum height of the antenna to be valid (but no range)
