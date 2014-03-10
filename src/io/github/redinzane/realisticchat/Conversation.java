@@ -4,13 +4,15 @@ import java.util.LinkedList;
 
 import org.bukkit.entity.Player;
 
-/**
- * A class representing a conversation via phone
- * 
- */
 
+/*
+ * EVIL COUPLING!!!
+ * All the static stuff is initialized in RalisticChatListener
+ */
 public class Conversation 
 {
+	public static LinkedList<Conversation> conversations = new LinkedList<Conversation>();
+	
 	Player caller;
 	LinkedList<Player> playersInConversation = new LinkedList<Player>();
 	int playercounter;
@@ -18,13 +20,12 @@ public class Conversation
 	boolean isConversationValid = false;
 	
 	//Things that should be in the config
-	String message_Disconnect = "The call has disconnected.";
-	String message_ConversationEstablished = "Conversation established between:";
-	String message_PlayerAdded = " has entered the conversation.";
-	String message_PlayerRemoved = " has left the conversation.";
-	final static int maxPlayercount = 10;
-	
-	public static LinkedList<Conversation> conversations = new LinkedList<Conversation>();
+	static String colorcode;
+	static String message_Disconnect;
+	static String message_ConversationEstablished;
+	static String message_PlayerAdded;
+	static String message_PlayerRemoved;
+	static int maxPlayercount;
 	
 	/**
 	 * Creates a Conversation and automatically adds it to the list of conversations
@@ -40,8 +41,8 @@ public class Conversation
 		this.timeStarted = System.currentTimeMillis();
 		isConversationValid = true;
 		String establishingMessage = message_ConversationEstablished + " " + caller.getName() + " and " + called.getName();
-		caller.sendMessage(RealisticChatListener.getChatColorCode(RealisticChatListener.gray) + establishingMessage);
-		called.sendMessage(RealisticChatListener.getChatColorCode(RealisticChatListener.gray) + establishingMessage);
+		caller.sendMessage(colorcode + establishingMessage);
+		called.sendMessage(colorcode + establishingMessage);
 		conversations.add(this);
 	}
 	
@@ -64,7 +65,7 @@ public class Conversation
 				this.playercounter++;
 				for(Player allPlayers: this.playersInConversation)
 				{
-					allPlayers.sendMessage(RealisticChatListener.getChatColorCode(RealisticChatListener.gray) + player.getName() + message_PlayerAdded);
+					allPlayers.sendMessage(colorcode + player.getName() + " " + message_PlayerAdded);
 				}
 				return true;
 			}
@@ -92,7 +93,7 @@ public class Conversation
 		
 		if(this.playersInConversation.remove(player))
 		{
-			player.sendMessage(RealisticChatListener.getChatColorCode(RealisticChatListener.gray) + message_Disconnect);
+			player.sendMessage(colorcode + message_Disconnect);
 			if(player.equals(caller))
 			{
 				this.isConversationValid = false;
@@ -112,7 +113,7 @@ public class Conversation
 				{
 					for(Player remainingPlayer: this.playersInConversation)
 					{
-						remainingPlayer.sendMessage(RealisticChatListener.getChatColorCode(RealisticChatListener.gray) + player.getName() + message_PlayerRemoved);
+						remainingPlayer.sendMessage(colorcode + player.getName() + " " + message_PlayerRemoved);
 					}
 				}
 				return true;
@@ -134,7 +135,7 @@ public class Conversation
 		{
 			for(Player player: this.playersInConversation)
 			{
-				player.sendMessage(RealisticChatListener.getChatColorCode(RealisticChatListener.gray) + message_Disconnect);
+				player.sendMessage(colorcode + message_Disconnect);
 			}
 			conversations.remove(this);
 			return true;
@@ -169,7 +170,4 @@ public class Conversation
 	{
 		return this.playersInConversation.contains(player);
 	}
-	
-	
-
 }
