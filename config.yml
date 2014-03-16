@@ -17,7 +17,7 @@ celltower:
   maximumRange: 5000    # maximum range that can be achieved with this antenna if it's height is maximumHeight
   scrambleRange: 0.9    # fraction of range from tower after which cell chat is scrambled
 messages:               # Use & for color codes	
-  colorcode: &7
+  colorcode: "&7"
   message_Unavailability: This player is currently unavailable. Please try again later.
   message_ConversationFull: Your conference call is full. You cannot add any more players.
   message_notOriginalCaller: Only the original caller can add players to the conference call.

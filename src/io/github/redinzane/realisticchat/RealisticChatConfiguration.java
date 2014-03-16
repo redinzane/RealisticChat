@@ -84,7 +84,14 @@ public class RealisticChatConfiguration
 	public String getColorcode()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(COLORCODE_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	/**
 	 * Retrieve the Message.
@@ -93,7 +100,14 @@ public class RealisticChatConfiguration
 	public String getConversationFullMessage()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(CONVERSATIONFULL_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	/**
 	 * Retrieve the Message.
@@ -102,7 +116,14 @@ public class RealisticChatConfiguration
 	public String getNotOriginalCallerMessage()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(NOTORIGINALCALLER_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	/**
 	 * Retrieve the Message.
@@ -111,7 +132,14 @@ public class RealisticChatConfiguration
 	public String getUnavailabilityMessage()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(UNAVAILABILITY_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	/**
 	 * Retrieve the Message.
@@ -120,7 +148,14 @@ public class RealisticChatConfiguration
 	public String getWaiterHasEndedCalledMessage()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(WAITERHASENDEDCALLED_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	/**
 	 * Retrieve the Message.
@@ -129,7 +164,14 @@ public class RealisticChatConfiguration
 	public String getWaiterHasEndedCallerMessage()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(WAITERHASENDEDCALLER_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	/**
 	 * Retrieve the Message.
@@ -138,7 +180,14 @@ public class RealisticChatConfiguration
 	public String getWaiterHasEndedCalledDisconnectedMessage()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(WAITERHASENDEDCALLEDDISCONNECTED_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	/**
 	 * Retrieve the Message.
@@ -147,7 +196,14 @@ public class RealisticChatConfiguration
 	public String getWaiterIsStartingCalledMessage()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(WAITERISSTARTINGCALLED_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	/**
 	 * Retrieve the Message.
@@ -156,7 +212,14 @@ public class RealisticChatConfiguration
 	public String getWaiterIsStartingCallerMessage()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(WAITERISSTARTINGCALLER_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	
 	/**
@@ -166,7 +229,14 @@ public class RealisticChatConfiguration
 	public String getConversationEstablishedMessage()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(CONVERSATIONESTABLISHED_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	/**
 	 * Retrieve the Message.
@@ -175,7 +245,14 @@ public class RealisticChatConfiguration
 	public String getDisconnectMessage()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(DISCONNECT_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	/**
 	 * Retrieve the Message.
@@ -184,7 +261,14 @@ public class RealisticChatConfiguration
 	public String getPlayerAddedMessage()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(PLAYERADDED_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	/**
 	 * Retrieve the Message.
@@ -193,7 +277,14 @@ public class RealisticChatConfiguration
 	public String getPlayerRemovedMessage()
 	{
 		String value = getSectionOrDefault(SECTION_MESSAGES).getString(PLAYERREMOVED_KEY);
-		return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		if(value == null)
+		{
+			return "";
+		}
+		else
+		{
+			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+		}
 	}
 	
 	
