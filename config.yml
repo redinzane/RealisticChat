@@ -10,7 +10,7 @@ features:
   loreitems: false
   maxPlayercount: 10
 loreitems:
-  phone: &bPhone        # Use & for color codes	
+  phone: "&bPhone"        # Use & for color codes	
 celltower:
   minimumHeight: 6      # minimum height of the antenna to be valid (but no range)
   maximumHeight: 40     # maximum height of the antenna, higher antennas won't help increase range
@@ -18,15 +18,15 @@ celltower:
   scrambleRange: 0.9    # fraction of range from tower after which cell chat is scrambled
 messages:               # Use & for color codes	
   colorcode: "&7"
-  message_Unavailability: This player is currently unavailable. Please try again later.
-  message_ConversationFull: Your conference call is full. You cannot add any more players.
-  message_notOriginalCaller: Only the original caller can add players to the conference call.
-  message_waiterIsStartingCalled:  is calling you.
-  message_waiterIsStartingCaller: You are calling 
-  message_waiterHasEndedCaller: You have ended the call.
-  message_waiterHasEndedCalled: The phone has stopped ringing.
-  message_waiterHasEndedCalledDisconnected:  has disconnected.
-  message_Disconnect: The call has disconnected.
-  message_ConversationEstablished: Conversation established between:
-  message_PlayerAdded: has entered the conversation.
-  message_PlayerRemoved: has left the conversation.
+  message_Unavailability: "This player is currently unavailable. Please try again later."
+  message_ConversationFull: "Your conference call is full. You cannot add any more players."
+  message_notOriginalCaller: "Only the original caller can add players to the conference call."
+  message_waiterIsStartingCalled: " is calling you."
+  message_waiterIsStartingCaller: "You are calling "
+  message_waiterHasEndedCaller: "You have ended the call."
+  message_waiterHasEndedCalled: "The phone has stopped ringing."
+  message_waiterHasEndedCalledDisconnected: " has disconnected."
+  message_Disconnect: "The call has disconnected."
+  message_ConversationEstablished: "Conversation established between:"
+  message_PlayerAdded: " has entered the conversation."
+  message_PlayerRemoved: " has left the conversation."

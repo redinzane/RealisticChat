@@ -5,10 +5,6 @@ import java.util.LinkedList;
 import org.bukkit.entity.Player;
 
 
-/*
- * EVIL COUPLING!!!
- * All the static stuff is initialized in RalisticChatListener
- */
 public class Conversation 
 {
 	public static LinkedList<Conversation> conversations = new LinkedList<Conversation>();
@@ -19,7 +15,6 @@ public class Conversation
 	long timeStarted;
 	boolean isConversationValid = false;
 	
-	//Things that should be in the config
 	static String colorcode;
 	static String message_Disconnect;
 	static String message_ConversationEstablished;
@@ -40,7 +35,7 @@ public class Conversation
 		this.playercounter = 2;
 		this.timeStarted = System.currentTimeMillis();
 		isConversationValid = true;
-		String establishingMessage = message_ConversationEstablished + " " + caller.getName() + " and " + called.getName();
+		String establishingMessage = message_ConversationEstablished + caller.getDisplayName() + " and " + called.getDisplayName();
 		caller.sendMessage(colorcode + establishingMessage);
 		called.sendMessage(colorcode + establishingMessage);
 		conversations.add(this);
@@ -65,7 +60,7 @@ public class Conversation
 				this.playercounter++;
 				for(Player allPlayers: this.playersInConversation)
 				{
-					allPlayers.sendMessage(colorcode + player.getName() + " " + message_PlayerAdded);
+					allPlayers.sendMessage(colorcode + player.getDisplayName() +  message_PlayerAdded);
 				}
 				return true;
 			}
@@ -113,7 +108,7 @@ public class Conversation
 				{
 					for(Player remainingPlayer: this.playersInConversation)
 					{
-						remainingPlayer.sendMessage(colorcode + player.getName() + " " + message_PlayerRemoved);
+						remainingPlayer.sendMessage(colorcode + player.getDisplayName() + message_PlayerRemoved);
 					}
 				}
 				return true;

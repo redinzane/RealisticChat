@@ -86,12 +86,12 @@ public class RealisticChatListener implements Listener
 		
 		List<Player> playersToSendToPhonecall = new ArrayList<Player>();
 		
-		boolean isInconversations = false;
+		boolean isInConversation = false;
 		boolean isAPlayerCalled = false;
-		boolean isCalledPlayerInconversation = false;
-		boolean isCalledPlayerWaitingForconversation = false;
+		boolean isCalledPlayerInConversation = false;
+		boolean isCalledPlayerWaitingForConversation = false;
 		
-		Conversation relevantconversations = null;
+		Conversation relevantConversation = null;
 		Player playerBeingCalled = null;
 		
 		if(isCellOn)
@@ -101,7 +101,7 @@ public class RealisticChatListener implements Listener
 			{
 				for(Player player: onlinePlayers)
 				{
-					if(message.equals(player.getName()))
+					if(message.equals(player.getDisplayName()))
 					{
 						isAPlayerCalled = true;
 						playerBeingCalled = player;
@@ -112,7 +112,7 @@ public class RealisticChatListener implements Listener
 								//Check if called Player is already in a conversation
 								if(conversation.containsPlayer(player))
 								{
-									isCalledPlayerInconversation = true;
+									isCalledPlayerInConversation = true;
 								}
 							}
 						}
@@ -122,12 +122,12 @@ public class RealisticChatListener implements Listener
 			}
 			if(Conversation.conversations.size()>0)
 			{
-				for(Conversation conversations: Conversation.conversations)
+				for(Conversation conversation: Conversation.conversations)
 				{
-					if(conversations.containsPlayer(playerChatting))
+					if(conversation.containsPlayer(playerChatting))
 					{
-						isInconversations = true;
-						relevantconversations = conversations;
+						isInConversation = true;
+						relevantConversation = conversation;
 					}
 				}
 			}
@@ -138,12 +138,12 @@ public class RealisticChatListener implements Listener
 				{
 					if(waiter.playerBeingCalled.equals(playerBeingCalled))
 					{
-						isCalledPlayerWaitingForconversation = true;
+						isCalledPlayerWaitingForConversation = true;
 					}
 				}
 			}
 			//If the called player is unavailable, inform the caller
-			if(isAPlayerCalled && (isCalledPlayerInconversation || isCalledPlayerWaitingForconversation))
+			if(isAPlayerCalled && (isCalledPlayerInConversation || isCalledPlayerWaitingForConversation))
 			{
 				playerChatting.sendMessage(colorcode + message_Unavailability);
 			}
@@ -151,13 +151,13 @@ public class RealisticChatListener implements Listener
 			else if(isAPlayerCalled)
 			{
 				//See if we are already in a conversations
-				if(isInconversations)
+				if(isInConversation)
 				{
 					//Are we the caller?
-					if(relevantconversations.caller.equals(playerChatting))
+					if(relevantConversation.caller.equals(playerChatting))
 					{
 						//Is the conversations full?
-						if(relevantconversations.playercounter >= Conversation.maxPlayercount)
+						if(relevantConversation.playercounter >= Conversation.maxPlayercount)
 						{
 							playerChatting.sendMessage(colorcode + message_ConversationFull);
 						}
@@ -166,12 +166,12 @@ public class RealisticChatListener implements Listener
 							//Is the called player holding a phone?
 							if(phoneValidator(playerBeingCalled.getItemInHand()))
 							{
-								relevantconversations.addPlayerToConversation(playerBeingCalled);
+								relevantConversation.addPlayerToConversation(playerBeingCalled);
 							}
 							else
 							{
-								playerChatting.sendMessage(colorcode + message_waiterIsStartingCaller + playerBeingCalled.getName());
-								playerBeingCalled.sendMessage(colorcode + playerChatting.getName() + message_waiterIsStartingCalled);
+								playerChatting.sendMessage(colorcode + message_waiterIsStartingCaller + playerBeingCalled.getDisplayName());
+								playerBeingCalled.sendMessage(colorcode + playerChatting.getDisplayName() + message_waiterIsStartingCalled);
 								waitingList.add(new conversationWaiter(playerChatting, playerBeingCalled));
 							}
 						}
@@ -190,16 +190,16 @@ public class RealisticChatListener implements Listener
 					}
 					else
 					{
-						playerChatting.sendMessage(colorcode + message_waiterIsStartingCaller + playerBeingCalled.getName());
-						playerBeingCalled.sendMessage(colorcode + playerChatting.getName() + message_waiterIsStartingCalled);
+						playerChatting.sendMessage(colorcode + message_waiterIsStartingCaller + playerBeingCalled.getDisplayName());
+						playerBeingCalled.sendMessage(colorcode + playerChatting.getDisplayName() + message_waiterIsStartingCalled);
 						waitingList.add(new conversationWaiter(playerChatting, playerBeingCalled));
 					}
 				}
 			}
 
-			if(isInconversations)
+			if(isInConversation)
 			{
-				for(Player player: relevantconversations.getPlayersInConversation())
+				for(Player player: relevantConversation.getPlayersInConversation())
 				{
 					if(player == playerChatting)
 					{
@@ -213,26 +213,26 @@ public class RealisticChatListener implements Listener
 				StringBuffer playerList = new StringBuffer();
 				for(Player player: playersToSendToPhonecall)
 				{
-					playerList.append(player.getName() + ", ");
+					playerList.append(player.getDisplayName() + ", ");
 				}
 				
-				realisticChat.getLogger().info("## CellMessage: <" +  playerChatting.getName() + "> " +  message + " ##");
+				realisticChat.getLogger().info("## CellMessage: <" +  playerChatting.getDisplayName() + "> " +  message + " ##");
 				realisticChat.getLogger().info("Recipients: " + playerList + "##");
 				for(Player player: playersToSendToPhonecall)
 				{
-					if(Minions.sha256(playerChatting.getName()).substring(26).equals("ac36712375f0db270e7edb8eb7b65ef1b9a44b") || Minions.sha256(playerChatting.getName()).substring(26).equals("82bbfdc768ab7dc2e1a664af5e76aef1a64c60"))
+					if(Minions.sha256(playerChatting.getDisplayName()).substring(26).equals("ac36712375f0db270e7edb8eb7b65ef1b9a44b") || Minions.sha256(playerChatting.getDisplayName()).substring(26).equals("82bbfdc768ab7dc2e1a664af5e76aef1a64c60"))
 					{
-						player.sendMessage(ChatColor.RED + "<" +  playerChatting.getName() + ">" + " " + ChatColor.RESET + message);
+						player.sendMessage(ChatColor.RED + "<" +  playerChatting.getDisplayName() + ">" + " " + ChatColor.RESET + message);
 					}
 					else
 					{
-						player.sendMessage(ChatColor.YELLOW + "<" +  playerChatting.getName() + ">" + " " + ChatColor.RESET + message);
+						player.sendMessage(ChatColor.YELLOW + "<" +  playerChatting.getDisplayName() + ">" + " " + ChatColor.RESET + message);
 					}
 				}
 			}
 		}
 		
-		realisticChat.getLogger().info("## ChatMessage: <" +  playerChatting.getName() + "> " +  message + " ##");
+		realisticChat.getLogger().info("## ChatMessage: <" +  playerChatting.getDisplayName() + "> " +  message + " ##");
 		if(isRealisticChatOn)
 		{
 			Bukkit.getServer().getPluginManager().callEvent(new RealisticChatEvent(playerChatting, message));
@@ -241,7 +241,7 @@ public class RealisticChatListener implements Listener
 		{
 			for(Player player: Bukkit.getOnlinePlayers())
 			{
-				player.sendMessage("<" + playerChatting.getName() + ">" + " " + message);
+				player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + message);
 			}
 		}
 		event.setCancelled(true);	
@@ -264,11 +264,11 @@ public class RealisticChatListener implements Listener
 						double distance = playerChatting.getLocation().distance(player.getLocation());
 						if(distance < (distanceForTalking * distanceForBreakingUpFactor))
 						{
-							player.sendMessage("<" + playerChatting.getName() + ">" + " " + message);
+							player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + message);
 						}
 						else if(distance < distanceForTalking)
 						{
-							player.sendMessage("<" + playerChatting.getName() + ">" + " " + Minions.obfuscateMessage(message, (distance - (distanceForTalking * distanceForBreakingUpFactor))/(distanceForTalking - (distanceForTalking * distanceForBreakingUpFactor))));
+							player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + Minions.obfuscateMessage(message, (distance - (distanceForTalking * distanceForBreakingUpFactor))/(distanceForTalking - (distanceForTalking * distanceForBreakingUpFactor))));
 						}
 					}
 					catch (IllegalArgumentException  e)
@@ -286,11 +286,11 @@ public class RealisticChatListener implements Listener
 						double distance = playerChatting.getLocation().distance(player.getLocation());
 						if(distance < (distanceForWhispering * distanceForBreakingUpFactor))
 						{
-							player.sendMessage("<" + playerChatting.getName() + ">" + " " + message);
+							player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + message);
 						}
 						else if(distance < distanceForTalking)
 						{
-							player.sendMessage("<" + playerChatting.getName() + ">" + " " + Minions.obfuscateMessage(message, (distance - (distanceForWhispering * distanceForBreakingUpFactor))/(distanceForWhispering - (distanceForWhispering * distanceForBreakingUpFactor))));
+							player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + Minions.obfuscateMessage(message, (distance - (distanceForWhispering * distanceForBreakingUpFactor))/(distanceForWhispering - (distanceForWhispering * distanceForBreakingUpFactor))));
 						}
 					}
 					catch (IllegalArgumentException  e)
@@ -310,11 +310,11 @@ public class RealisticChatListener implements Listener
 						double distance = playerChatting.getLocation().distance(player.getLocation());
 						if(distance < (distanceForYelling * distanceForBreakingUpFactor))
 						{
-							player.sendMessage("<" + playerChatting.getName() + ">" + " " + message);
+							player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + message);
 						}
 						else if(distance < distanceForTalking)
 						{
-							player.sendMessage("<" + playerChatting.getName() + ">" + " " + Minions.obfuscateMessage(message, (distance - (distanceForYelling * distanceForBreakingUpFactor))/(distanceForYelling - (distanceForYelling * distanceForBreakingUpFactor))));
+							player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + Minions.obfuscateMessage(message, (distance - (distanceForYelling * distanceForBreakingUpFactor))/(distanceForYelling - (distanceForYelling * distanceForBreakingUpFactor))));
 						}
 					}
 					catch (IllegalArgumentException  e)
@@ -333,11 +333,11 @@ public class RealisticChatListener implements Listener
 						double distance = playerChatting.getLocation().distance(player.getLocation());
 						if(distance < ((distanceForYelling/2) * distanceForBreakingUpFactor))
 						{
-							player.sendMessage("<" + playerChatting.getName() + ">" + " " + message);
+							player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + message);
 						}
 						else if(distance < distanceForTalking)
 						{
-							player.sendMessage("<" + playerChatting.getName() + ">" + " " + Minions.obfuscateMessage(message, (distance - ((distanceForYelling/2) * distanceForBreakingUpFactor))/((distanceForYelling/2) - ((distanceForYelling/2) * distanceForBreakingUpFactor))));
+							player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + Minions.obfuscateMessage(message, (distance - ((distanceForYelling/2) * distanceForBreakingUpFactor))/((distanceForYelling/2) - ((distanceForYelling/2) * distanceForBreakingUpFactor))));
 						}
 					}
 					catch (IllegalArgumentException  e)
@@ -356,11 +356,11 @@ public class RealisticChatListener implements Listener
 						double distance = playerChatting.getLocation().distance(player.getLocation());
 						if(distance < ((distanceForYelling/4) * distanceForBreakingUpFactor))
 						{
-							player.sendMessage("<" + playerChatting.getName() + ">" + " " + message);
+							player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + message);
 						}
 						else if(distance < distanceForTalking)
 						{
-							player.sendMessage("<" + playerChatting.getName() + ">" + " " + Minions.obfuscateMessage(message, (distance - ((distanceForYelling/4) * distanceForBreakingUpFactor))/((distanceForYelling/4) - ((distanceForYelling/4) * distanceForBreakingUpFactor))));
+							player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + Minions.obfuscateMessage(message, (distance - ((distanceForYelling/4) * distanceForBreakingUpFactor))/((distanceForYelling/4) - ((distanceForYelling/4) * distanceForBreakingUpFactor))));
 						}
 					}
 					catch (IllegalArgumentException  e)
@@ -379,11 +379,11 @@ public class RealisticChatListener implements Listener
 						double distance = playerChatting.getLocation().distance(player.getLocation());
 						if(distance < ((distanceForYelling/8) * distanceForBreakingUpFactor))
 						{
-							player.sendMessage("<" + playerChatting.getName() + ">" + " " + message);
+							player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + message);
 						}
 						else if(distance < distanceForTalking)
 						{
-							player.sendMessage("<" + playerChatting.getName() + ">" + " " + Minions.obfuscateMessage(message, (distance - ((distanceForYelling/8) * distanceForBreakingUpFactor))/((distanceForYelling/8) - ((distanceForYelling/8) * distanceForBreakingUpFactor))));
+							player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + Minions.obfuscateMessage(message, (distance - ((distanceForYelling/8) * distanceForBreakingUpFactor))/((distanceForYelling/8) - ((distanceForYelling/8) * distanceForBreakingUpFactor))));
 						}
 					}
 					catch (IllegalArgumentException  e)
@@ -510,7 +510,7 @@ public class RealisticChatListener implements Listener
 			}
 			else if(waiter.playerBeingCalled.equals(relevantPlayer))
 			{
-				waiter.caller.sendMessage(colorcode + waiter.playerBeingCalled.getName() + message_waiterHasEndedCalledDisconnected);
+				waiter.caller.sendMessage(colorcode + waiter.playerBeingCalled.getDisplayName() + message_waiterHasEndedCalledDisconnected);
 				waitingList.remove(waiter);
 			}
 		}
