@@ -216,7 +216,7 @@ public class RealisticChatListener implements Listener
 					playerList.append(player.getDisplayName() + ", ");
 				}
 				
-				realisticChat.getLogger().info("## CellMessage: <" +  playerChatting.getDisplayName() + "> " +  message + " ##");
+				realisticChat.getLogger().info("## CellMessage: <" +  playerChatting.getName() + "> " +  message + " ##");
 				realisticChat.getLogger().info("Recipients: " + playerList + "##");
 				for(Player player: playersToSendToPhonecall)
 				{
@@ -232,7 +232,7 @@ public class RealisticChatListener implements Listener
 			}
 		}
 		
-		realisticChat.getLogger().info("## ChatMessage: <" +  playerChatting.getDisplayName() + "> " +  message + " ##");
+		realisticChat.getLogger().info("## ChatMessage: <" +  playerChatting.getName() + "> " +  message + " ##");
 		if(isRealisticChatOn)
 		{
 			Bukkit.getServer().getPluginManager().callEvent(new RealisticChatEvent(playerChatting, message));
