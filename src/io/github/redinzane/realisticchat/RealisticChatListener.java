@@ -101,7 +101,7 @@ public class RealisticChatListener implements Listener
 			{
 				for(Player player: onlinePlayers)
 				{
-					if(message.equals(player.getDisplayName()))
+					if(message.equals(player.getName()))
 					{
 						isAPlayerCalled = true;
 						playerBeingCalled = player;
