@@ -1,7 +1,15 @@
-distances:
+numbers:
   distanceforwhisperimg: 10
   distancefortalking: 50
   distanceforyelling: 1000
+  yellingfactor1: 8
+  yellingfactor2: 4
+  yellingfactor3: 2
+  yellingfactor4: 1
+  hungercost1: 1
+  hungercost2: 5
+  hungercost3: 10
+  hungercost4: 20
   distanceforbreakingupfactor: 0.7
 features:
   celltowers: true
@@ -18,6 +26,14 @@ celltower:
   scrambleRange: 0.9    # fraction of range from tower after which cell chat is scrambled
 messages:               # Use & for color codes	
   colorcode: "&7"
+  colorcodeincomingchat: "&f"
+  colorcodeoutgoingchat: "&f"
+  colorcodeincomingcell: "&f"
+  colorcodeoutgoingcell: "&f"
+  colorcodeincomingchatname: "&e"
+  colorcodeoutgoingchatname: "&f"
+  colorcodeincomingcellname: "&e"
+  colorcodeoutgoingcellname: "&f"
   message_Unavailability: "This player is currently unavailable. Please try again later."
   message_ConversationFull: "Your conference call is full. You cannot add any more players."
   message_notOriginalCaller: "Only the original caller can add players to the conference call."

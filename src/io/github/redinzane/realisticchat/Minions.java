@@ -11,12 +11,11 @@ import java.util.Random;
  */
 public class Minions {
 
-    private static final char obfuscate0 = ChatColor.WHITE.getChar();
     private static final char obfuscate1 = ChatColor.GRAY.getChar();
     private static final char obfuscate2 = ChatColor.DARK_GRAY.getChar();
 
-    private static final void appendLvl0(StringBuffer buf, char c){
-        buf.append(ChatColor.COLOR_CHAR).append(obfuscate0).append(c);
+    private static final void appendLvl0(StringBuffer buf, char c, char standard){
+        buf.append(ChatColor.COLOR_CHAR).append(standard).append(c);
     }
     private static final void appendLvl1(StringBuffer buf, char c){
         buf.append(ChatColor.COLOR_CHAR).append(obfuscate1).append(c);
@@ -35,7 +34,7 @@ public class Minions {
      * @param scale a scale from 0 (nearly no obfuscation) to 1 (nearly fully obfuscated), higher values are possible
      * @return an obfuscated message
      */
-    public static final String obfuscateMessage(String message,double scale){
+    public static final String obfuscateMessage(String message, double scale, char standard){
         if(scale>=1.5) return "";
         Random r = new Random();
         StringBuffer sb = new StringBuffer();
@@ -43,17 +42,17 @@ public class Minions {
         double sigma = 0.5;
 
         for(int i=0;i<message.length();i++){
-            int obsfucation =0;
+            int obsfucation = 0;
 
-            obsfucation = (int) (r.nextGaussian()*sigma+mean);
+            obsfucation = (int) (r.nextGaussian() * sigma + mean);
             if(obsfucation<0)
-                obsfucation =0;
-            else if (obsfucation>3)
-                obsfucation=3;
+                obsfucation = 0;
+            else if (obsfucation > 3)
+                obsfucation = 3;
 
             switch (obsfucation){
                 case 0:
-                    appendLvl0(sb,message.charAt(i));
+                    appendLvl0(sb,message.charAt(i),standard);
                     break;
                 case 1:
                     appendLvl1(sb,message.charAt(i));

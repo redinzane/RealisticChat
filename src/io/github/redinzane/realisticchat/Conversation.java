@@ -35,9 +35,9 @@ public class Conversation
 		this.playercounter = 2;
 		this.timeStarted = System.currentTimeMillis();
 		isConversationValid = true;
-		String establishingMessage = message_ConversationEstablished + caller.getDisplayName() + " and " + called.getDisplayName();
-		caller.sendMessage(colorcode + establishingMessage);
-		called.sendMessage(colorcode + establishingMessage);
+		String establishingMessage = colorcode + message_ConversationEstablished + caller.getDisplayName() + colorcode + " and " + called.getDisplayName() + colorcode;
+		caller.sendMessage(establishingMessage);
+		called.sendMessage(establishingMessage);
 		conversations.add(this);
 	}
 	
@@ -60,7 +60,7 @@ public class Conversation
 				this.playercounter++;
 				for(Player allPlayers: this.playersInConversation)
 				{
-					allPlayers.sendMessage(colorcode + player.getDisplayName() +  message_PlayerAdded);
+					allPlayers.sendMessage(colorcode + player.getDisplayName() + colorcode +  message_PlayerAdded);
 				}
 				return true;
 			}
@@ -108,7 +108,7 @@ public class Conversation
 				{
 					for(Player remainingPlayer: this.playersInConversation)
 					{
-						remainingPlayer.sendMessage(colorcode + player.getDisplayName() + message_PlayerRemoved);
+						remainingPlayer.sendMessage(colorcode + player.getDisplayName() + colorcode + message_PlayerRemoved);
 					}
 				}
 				return true;
