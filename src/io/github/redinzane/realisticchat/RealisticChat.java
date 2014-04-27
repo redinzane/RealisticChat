@@ -1,36 +1,31 @@
 package io.github.redinzane.realisticchat;
+/**
+ * Created by Moritz Schwab
+ * CellTower system largely inspired by Thomas Richner's RadioTower plugin with friendly permission and some help in understanding it
+ */
+
 
 import io.github.redinzane.realisticchat.RealisticChatConfiguration;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class RealisticChat extends JavaPlugin 
-{
-		// Configuration
-		protected RealisticChatConfiguration config;
-		// Minecraft packet handling
-		private RealisticChatListener realisticChatListener;
+public class RealisticChat extends JavaPlugin {
+	// Configuration
+	protected RealisticChatConfiguration config;
 
-		@Override
-	    public void onEnable()
-		{
-			//Creates a Config
-			this.saveDefaultConfig();
-			config = new RealisticChatConfiguration(getConfig());
-			
-			realisticChatListener = new RealisticChatListener(this, config);
-			
-			// Register listeners
-			getServer().getPluginManager().registerEvents(realisticChatListener, this);
+	private RealisticChatListener realisticChatListener;
 
-			//To-Do: Read antennas from file here
-			
-	    }
-
-    @Override
-	    public void onDisable()
-	    {
-	    	
-	    }
-	    
+	@Override
+	public void onEnable() {
+		this.saveDefaultConfig();
+		config = new RealisticChatConfiguration(getConfig());
+		realisticChatListener = new RealisticChatListener(this, config);
+		realisticChatListener.onEnable();
 	}
+
+	@Override
+	public void onDisable() {
+		realisticChatListener.onDisable();
+	}
+
+}

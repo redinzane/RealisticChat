@@ -1,5 +1,5 @@
 numbers:
-  distanceforwhisperimg: 10
+  distanceforwhispering: 10
   distancefortalking: 50
   distanceforyelling: 1000
   yellingfactor1: 8
@@ -23,7 +23,8 @@ celltower:
   minimumHeight: 6      # minimum height of the antenna to be valid (but no range)
   maximumHeight: 40     # maximum height of the antenna, higher antennas won't help increase range
   maximumRange: 5000    # maximum range that can be achieved with this antenna if it's height is maximumHeight
-  scrambleRange: 0.9    # fraction of range from tower after which cell chat is scrambled
+  baseblock: NOTE_BLOCK # Must be exact name used in Bukkit's Material Enum otherwise it'll default to a note block
+  towertickperiod: 100  # How often towers are checked for validity in ticks
 messages:               # Use & for color codes	
   colorcode: "&7"
   colorcodeincomingchat: "&f"
