@@ -239,16 +239,11 @@ public class RealisticChatListener implements Listener {
 				playerChatting.sendMessage(colorcode
 						+ message_notConnectedToTheNetwork);
 				return;
-			} else if (ctManager.getTower(towerLocation)
-					.getNormalizedReceptionPower(place) <= 0)
-				;
-			{
+			} else if (ctManager.getTower(towerLocation).getNormalizedReceptionPower(place) <= 0) {
 				if (isInConversation) {
-					relevantConversation
-							.removePlayerFromConversation(playerChatting);
+					relevantConversation.removePlayerFromConversation(playerChatting);
 				}
-				playerChatting.sendMessage(colorcode
-						+ message_notConnectedToTheNetwork);
+				playerChatting.sendMessage(colorcode + message_notConnectedToTheNetwork);
 				return;
 			}
 		}
@@ -288,17 +283,15 @@ public class RealisticChatListener implements Listener {
 					isCalledPlayerWaitingForConversation = true;
 				}
 			}
-		}
-		if (isCellTowerOn) {
-			Location place = playerBeingCalled.getLocation();
-			Location towerLocation = ctManager.findClosestTower(place);
-			if (towerLocation == null) {
-				isCalledPlayerOutOfRange = false;
-			} else if (ctManager.getTower(towerLocation)
-					.getNormalizedReceptionPower(place) <= 0)
-				;
-			{
-				isCalledPlayerOutOfRange = false;
+			if (isCellTowerOn) {
+				Location place = playerBeingCalled.getLocation();
+				Location towerLocation = ctManager.findClosestTower(place);
+				if (towerLocation == null) {
+					isCalledPlayerOutOfRange = false;
+				} else if (ctManager.getTower(towerLocation).getNormalizedReceptionPower(place) <= 0);
+				{
+					isCalledPlayerOutOfRange = false;
+				}
 			}
 		}
 		// If the called player is unavailable, inform the caller

@@ -55,7 +55,7 @@ public class CellTower {
 			return false; // sign or torch missing
 		}
 
-		Location base = location.clone().add(0, 1, 0); // start of the antenna
+		Location base = location.clone(); // start of the antenna
 		int height = calculateHeight(base, WORLD_HEIGHT);
 		base.add(0, height+1, 0);
 		if (height < MIN_HEIGHT) {
