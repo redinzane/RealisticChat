@@ -1,7 +1,7 @@
 name: RealisticChat
 main: io.github.redinzane.realisticchat.RealisticChat
-version: 0.1
-description: RealisticChat Plugin Alpha
+version: 0.5
+description: RealisticChat Plugin Beta. Has RangedChat, Cellphones, Console Logging, Cell Towers
 
 depend:
 

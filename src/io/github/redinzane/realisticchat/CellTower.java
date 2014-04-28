@@ -13,8 +13,8 @@ public class CellTower {
 	protected static Material BASE_BLOCK = Material.getMaterial("NOTE_BLOCK");
 	private static final int MAX_POWER = 180000; // 180kW, power of a big radio tower in Switzerland. Not an ideal reference, but eh
 
-	private static final int ALPHA = 100; // 1 MHz...
-
+	private static final int ALPHA = 100; //Magic value
+	
 	// Non-static stuff
 	private Location location;
 	private int maxRange = 0;
@@ -29,10 +29,65 @@ public class CellTower {
 		}
 	}
 
+	public static boolean validate(Location location) {
+		if (location == null) {
+			return false;
+		}
+		int WORLD_HEIGHT = location.getWorld().getMaxHeight();
+		// check if base is correct
+		if (!location.getBlock().getType().equals(BASE_BLOCK)) {
+			return false;
+		}
+		boolean hasRedstoneTorch = false;
+		for (int x = -1; x <= 1; x++) {
+			for (int z = -1; z <= 1; z++) {
+				if (Math.abs(x) != Math.abs(z)) {
+					// check for torch
+					Location loc = location.clone();
+					Block block = loc.add(x, 0, z).getBlock();
+					if (block.getType().equals(Material.REDSTONE_TORCH_ON) || block.getType().equals(Material.REDSTONE_TORCH_OFF)) {
+						hasRedstoneTorch = true;
+					}
+				}
+			}
+		}
+		if (!hasRedstoneTorch) {
+			return false; // sign or torch missing
+		}
+
+		Location base = location.clone().add(0, 1, 0); // start of the antenna
+		int height = calculateHeight(base, WORLD_HEIGHT);
+		base.add(0, height+1, 0);
+		if (height < MIN_HEIGHT) {
+			return false; // antenna not high enough
+		}
+		while (base.getBlock().getType().equals(Material.AIR)) {
+			base.add(0, 1, 0);
+		}
+		if (base.getY() != WORLD_HEIGHT) {
+			return false; // no sunlight
+		}
+		return true;
+	}
+	
+	private static int calculateHeight(Location location, int WORLD_HEIGHT) {
+		Location base = location.clone().add(0, 1, 0); // start of the antenna
+		int height = 0;
+		for (int i = 0; i < MAX_HEIGHT && base.getY() < WORLD_HEIGHT; i++) {
+			if (base.getBlock().getType().equals(Material.IRON_FENCE)) {
+				height++;
+			} else {
+				break;
+			}
+			base.add(0, 1, 0);
+		}
+		return height;
+	}
+	
 	public boolean update() {
 		boolean result = validate(this.location);
 		if (result) {
-			int height = calculateHeight(this.location.add(0, 1, 0));
+			int height = calculateHeight(this.location.clone().add(0, 1, 0), location.getWorld().getMaxHeight());
 			calculateRange(height);
 			return true;
 		} else {
@@ -66,17 +121,7 @@ public class CellTower {
 	}
 
 	public double getReceptionPower(Location location) {
-		if (!this.location.getWorld().equals(location.getWorld())) {
-			return 0;
-		}
-		if (this.location.getBlock().getBlockPower() != 0) {
-			return 0; // tower off?
-		}
-		double distance = this.location.distance(location);
-		if (distance > MAX_RANGE) {
-			return 0;
-		}
-		return this.antennaGain * inversePowerLaw(distance);
+		return this.antennaGain * getNormalizedReceptionPower(location);
 	}
 
 	public double getNormalizedReceptionPower(Location location) {
@@ -93,64 +138,6 @@ public class CellTower {
 		return inversePowerLaw(distance);
 	}
 
-	public static boolean validate(Location location) {
-		if (location == null) {
-			return false;
-		}
-
-		int WORLD_HEIGHT = location.getWorld().getMaxHeight();
-		// check if base is correct
-		if (!location.getBlock().getType().equals(BASE_BLOCK)) {
-			return false;
-		}
-		boolean hasRedstoneTorch = false;
-		for (int x = -1; x <= 1; x++) {
-			for (int z = -1; z <= 1; z++) {
-				if (Math.abs(x) != Math.abs(z)) {
-					// check for torch
-					Location loc = location.clone();
-					Block block = loc.add(x, 0, z).getBlock();
-					if (block.getType().equals(Material.REDSTONE_TORCH_ON)
-							|| block.getType().equals(
-									Material.REDSTONE_TORCH_OFF)) {
-						hasRedstoneTorch = true;
-					}
-				}
-			}
-		}
-		if (!hasRedstoneTorch) {
-			return false; // sign or torch missing
-		}
-
-		Location base = location.clone().add(0, 1, 0); // start of the antenna
-		int height = calculateHeight(base);
-		base.add(0, height, 0);
-		if (height < MIN_HEIGHT) {
-			return false; // antenna not high enough
-		}
-		while (base.getBlock().getType().equals(Material.AIR)) {
-			base.add(0, 1, 0);
-		}
-		if (base.getY() != WORLD_HEIGHT) {
-			return false; // no sunlight
-		}
-		return true;
-	}
-
-	private static int calculateHeight(Location location) {
-		int WORLD_HEIGHT = location.getWorld().getMaxHeight();
-		Location base = location.clone().add(0, 1, 0); // start of the antenna
-		int height = 0;
-		for (int i = 0; i < MAX_HEIGHT && base.getY() < WORLD_HEIGHT; i++) {
-			if (base.getBlock().getType().equals(Material.IRON_FENCE)) {
-				height++;
-			} else {
-				break;
-			}
-			base.add(0, 1, 0);
-		}
-		return height;
-	}
 
 	public Location getLocation() {
 		return location;

@@ -26,7 +26,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.RedstoneTorch;
-import org.bukkit.material.Sign;
 
 public class CellTowerManager implements Listener, Runnable {
 	private Map<Location, CellTower> towers = new ConcurrentHashMap<Location, CellTower>();
@@ -56,7 +55,7 @@ public class CellTowerManager implements Listener, Runnable {
 		if (towers.containsKey(location)) {
 			return;
 		}
-		if (CellTower.validate(location)) {
+		else if (CellTower.validate(location)) {
 			towers.put(location, new CellTower(location));
 		}
 	}
@@ -93,16 +92,6 @@ public class CellTowerManager implements Listener, Runnable {
 				registerTower(location);
 			}
 
-		} else if (block.getType().equals(Material.WALL_SIGN)) {
-			Sign sign = (Sign) block.getState().getData();
-			if (sign.isWallSign()) {
-				location.add(sign.getAttachedFace().getModX(), sign
-						.getAttachedFace().getModY(), sign.getAttachedFace()
-						.getModZ());
-				if (location.getBlock().getType().equals(CellTower.BASE_BLOCK)) {
-					registerTower(location);
-				}
-			}
 		} else if (block.getType().equals(Material.REDSTONE_TORCH_ON)
 				|| block.getType().equals(Material.REDSTONE_TORCH_OFF)) {
 			RedstoneTorch torch = (RedstoneTorch) block.getState().getData();
@@ -127,14 +116,16 @@ public class CellTowerManager implements Listener, Runnable {
 			Location place = player.getLocation();
 			Location location = findClosestTower(place);
 			if (location == null) {
+				player.sendMessage(RCListener.colorcode + RCListener.message_notConnectedToTheNetwork);
 				return;
 			}
 			CellTower closestTower = getTower(location);
 			double reception = closestTower.getNormalizedReceptionPower(place);
 			if (reception <= 0) {
+				player.sendMessage(RCListener.colorcode + RCListener.message_notConnectedToTheNetwork);
 				return;
 			}
-			double power = closestTower.getAntennaGain();
+			double power = closestTower.getAntennaGain()*reception;
 			player.sendMessage(RCListener.colorcode + "["
 					+ Minions.powerToString(power) + "] "
 					+ "Connected to the phone network");
@@ -144,14 +135,14 @@ public class CellTowerManager implements Listener, Runnable {
 
 	// Returns the closest Tower in this world or null if none are found
 	public Location findClosestTower(Location locationPlayer) {
-		Location[] towers = (Location[]) getTowerLocations().toArray();
-		if (towers.length == 0) {
+		Set<Location> towersRead = getTowerLocations();
+		if (towersRead.isEmpty()) {
 			return null;
 		}
 		double distance;
 		double minimal = -1;
 		Location closestTower = null;
-		for (Location location : towers) {
+		for (Location location : towersRead) {
 			try {
 				distance = locationPlayer.distance(location);
 				if ((distance < minimal) || (minimal < 0)) {
@@ -167,8 +158,8 @@ public class CellTowerManager implements Listener, Runnable {
 
 	protected void saveTowers() {
 		RCListener.realisticChat.getLogger().info("Saving cell towers to disk in file: " + TOWERS_FILE);
-		Set<Location> towers = getTowerLocations();
-		writeCellTowersToFile(TOWERS_FILE, towers);
+		Set<Location> towersToBeSaved = getTowerLocations();
+		writeCellTowersToFile(TOWERS_FILE, towersToBeSaved);
 	}
 
 	protected void readTowers() {
@@ -182,8 +173,9 @@ public class CellTowerManager implements Listener, Runnable {
 	@Override
 	public void run() {
 		for (CellTower tower : towers.values()) {
-			if (!tower.update()) { // tower still valid?
-				towers.remove(tower);
+			if (!tower.update()) {
+				// tower still valid?
+				towers.remove(tower.getLocation());
 			}
 		}
 		if (towers.size() != numberOfTowers) {
