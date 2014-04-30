@@ -1,9 +1,9 @@
 package io.github.redinzane.realisticchat;
+
 /**
  * Created by Moritz Schwab
  * CellTower system largely inspired by Thomas Richner's RadioTower plugin with friendly permission and some help in understanding it
  */
-
 
 import io.github.redinzane.realisticchat.RealisticChatConfiguration;
 

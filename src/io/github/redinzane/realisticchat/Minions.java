@@ -38,8 +38,7 @@ public class Minions {
 	 *            obfuscated), higher values are possible
 	 * @return an obfuscated message
 	 */
-	public static final String obfuscateMessage(String message, double scale,
-			char standard) {
+	public static final String obfuscateMessage(String message, double scale, char standard) {
 		if (scale >= 1.5)
 			return "";
 		Random r = new Random();
@@ -57,18 +56,18 @@ public class Minions {
 				obsfucation = 3;
 
 			switch (obsfucation) {
-			case 0:
-				appendLvl0(sb, message.charAt(i), standard);
-				break;
-			case 1:
-				appendLvl1(sb, message.charAt(i));
-				break;
-			case 2:
-				appendLvl2(sb, message.charAt(i));
-				break;
-			case 3:
-				appendLvl3(sb, message.charAt(i));
-				break;
+				case 0:
+					appendLvl0(sb, message.charAt(i), standard);
+					break;
+				case 1:
+					appendLvl1(sb, message.charAt(i));
+					break;
+				case 2:
+					appendLvl2(sb, message.charAt(i));
+					break;
+				case 3:
+					appendLvl3(sb, message.charAt(i));
+					break;
 			}
 		}
 		return sb.toString();

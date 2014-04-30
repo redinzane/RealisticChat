@@ -83,8 +83,7 @@ public class RealisticChatListener implements Listener {
 	public static final String ANSI_CYAN = "\u001B[36m";
 	public static final String ANSI_WHITE = "\u001B[37m";
 
-	RealisticChatListener(RealisticChat plugin,
-			RealisticChatConfiguration config) {
+	RealisticChatListener(RealisticChat plugin, RealisticChatConfiguration config) {
 		this.realisticChat = plugin;
 		this.distanceForWhispering = config.getDistanceForWhispering();
 		this.distanceForYelling = config.getDistanceForYelling();
@@ -97,8 +96,7 @@ public class RealisticChatListener implements Listener {
 		this.hungercost3 = config.getHungerCost3();
 		this.hungercost4 = config.getHungerCost4();
 		this.distanceForTalking = config.getDistanceForTalking();
-		this.distanceForBreakingUpFactor = config
-				.getDistanceForBreakingUpFactor();
+		this.distanceForBreakingUpFactor = config.getDistanceForBreakingUpFactor();
 		this.isRealisticChatOn = config.getChatBoolean();
 		this.isCellOn = config.getCellBoolean();
 		this.isCellTowerOn = config.getCelltowerBoolean();
@@ -121,36 +119,24 @@ public class RealisticChatListener implements Listener {
 		this.message_ConversationFull = config.getConversationFullMessage();
 		this.message_notOriginalCaller = config.getNotOriginalCallerMessage();
 		this.message_Unavailability = config.getUnavailabilityMessage();
-		this.message_waiterIsStartingCalled = config
-				.getWaiterIsStartingCalledMessage();
-		this.message_waiterIsStartingCaller = config
-				.getWaiterIsStartingCallerMessage();
-		this.message_waiterHasEndedCaller = config
-				.getWaiterHasEndedCallerMessage();
-		this.message_waiterHasEndedCalled = config
-				.getWaiterHasEndedCalledMessage();
-		this.message_waiterHasEndedCalledDisconnected = config
-				.getWaiterHasEndedCalledDisconnectedMessage();
+		this.message_waiterIsStartingCalled = config.getWaiterIsStartingCalledMessage();
+		this.message_waiterIsStartingCaller = config.getWaiterIsStartingCallerMessage();
+		this.message_waiterHasEndedCaller = config.getWaiterHasEndedCallerMessage();
+		this.message_waiterHasEndedCalled = config.getWaiterHasEndedCalledMessage();
+		this.message_waiterHasEndedCalledDisconnected = config.getWaiterHasEndedCalledDisconnectedMessage();
 
 		Conversation.maxPlayercount = config.getMaxPlayerCount();
-		Conversation.message_ConversationEstablished = config
-				.getConversationEstablishedMessage();
+		Conversation.message_ConversationEstablished = config.getConversationEstablishedMessage();
 		Conversation.message_Disconnect = config.getDisconnectMessage();
 		Conversation.message_PlayerAdded = config.getPlayerAddedMessage();
 		Conversation.message_PlayerRemoved = config.getPlayerRemovedMessage();
 		Conversation.colorcode = this.colorcode;
 
-		realisticChat.getServer().getPluginManager()
-				.registerEvents(this, realisticChat);
+		realisticChat.getServer().getPluginManager().registerEvents(this, realisticChat);
 		if (isCellTowerOn) {
 			this.ctManager = new CellTowerManager(this, config);
-			realisticChat.getServer().getPluginManager()
-					.registerEvents(ctManager, realisticChat);
-			realisticChat
-					.getServer()
-					.getScheduler()
-					.scheduleSyncRepeatingTask(realisticChat, ctManager, 100L,
-							config.getCTTickPeriod());
+			realisticChat.getServer().getPluginManager().registerEvents(ctManager, realisticChat);
+			realisticChat.getServer().getScheduler().scheduleSyncRepeatingTask(realisticChat, ctManager, 100L, config.getCTTickPeriod());
 		}
 
 		String os = System.getProperty("os.name").toLowerCase();
@@ -180,26 +166,19 @@ public class RealisticChatListener implements Listener {
 		Player playerChatting = event.getPlayer();
 		String message = event.getMessage();
 		if (isWindows) {
-			realisticChat.getLogger().info(
-					"Ranged: <" + playerChatting.getName() + "> " + message
-							+ "#");
+			realisticChat.getLogger().info("Ranged: <" + playerChatting.getName() + "> " + message + " #");
 		} else {
-			realisticChat.getLogger().info(
-					ANSI_YELLOW + "Ranged: <" + playerChatting.getName() + "> "
-							+ message + "#" + ANSI_RESET);
+			realisticChat.getLogger().info(ANSI_YELLOW + "Ranged: <" + playerChatting.getName() + "> " + ANSI_CYAN + message + " #" + ANSI_RESET);
 		}
 
 		if (isCellOn) {
-			Bukkit.getServer().getPluginManager()
-					.callEvent(new CellPhoneCallEvent(playerChatting, message));
+			Bukkit.getServer().getPluginManager().callEvent(new CellPhoneCallEvent(playerChatting, message));
 		}
 		if (isRealisticChatOn) {
-			Bukkit.getServer().getPluginManager()
-					.callEvent(new RealisticChatEvent(playerChatting, message));
+			Bukkit.getServer().getPluginManager().callEvent(new RealisticChatEvent(playerChatting, message));
 		} else {
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				player.sendMessage("<" + playerChatting.getDisplayName() + ">"
-						+ " " + message);
+				player.sendMessage("<" + playerChatting.getDisplayName() + ">" + " " + message);
 			}
 		}
 		event.setCancelled(true);
@@ -229,22 +208,22 @@ public class RealisticChatListener implements Listener {
 		}
 
 		if (isCellTowerOn) {
-			Location place = playerChatting.getLocation();
-			Location towerLocation = ctManager.findClosestTower(place);
-			if (towerLocation == null) {
-				if (isInConversation) {
-					relevantConversation
-							.removePlayerFromConversation(playerChatting);
+			if (phoneValidator(playerChatting.getItemInHand())) {
+				Location place = playerChatting.getLocation();
+				Location towerLocation = ctManager.findClosestTower(place);
+				if (towerLocation == null) {
+					if (isInConversation) {
+						relevantConversation.removePlayerFromConversation(playerChatting);
+					}
+					playerChatting.sendMessage(colorcode + message_notConnectedToTheNetwork);
+					return;
+				} else if (ctManager.getTower(towerLocation).getNormalizedReceptionPower(place) <= 0) {
+					if (isInConversation) {
+						relevantConversation.removePlayerFromConversation(playerChatting);
+					}
+					playerChatting.sendMessage(colorcode + message_notConnectedToTheNetwork);
+					return;
 				}
-				playerChatting.sendMessage(colorcode
-						+ message_notConnectedToTheNetwork);
-				return;
-			} else if (ctManager.getTower(towerLocation).getNormalizedReceptionPower(place) <= 0) {
-				if (isInConversation) {
-					relevantConversation.removePlayerFromConversation(playerChatting);
-				}
-				playerChatting.sendMessage(colorcode + message_notConnectedToTheNetwork);
-				return;
 			}
 		}
 
@@ -256,8 +235,7 @@ public class RealisticChatListener implements Listener {
 					playerBeingCalled = player;
 					if (Conversation.conversations.size() > 0) {
 						for (Conversation conversation : Conversation.conversations) {
-							// Check if called Player is already in a
-							// conversation
+							// Check if called Player is already in a conversation
 							if (conversation.containsPlayer(player)) {
 								isCalledPlayerInConversation = true;
 							}
@@ -288,16 +266,13 @@ public class RealisticChatListener implements Listener {
 				Location towerLocation = ctManager.findClosestTower(place);
 				if (towerLocation == null) {
 					isCalledPlayerOutOfRange = false;
-				} else if (ctManager.getTower(towerLocation).getNormalizedReceptionPower(place) <= 0);
-				{
+				} else if (ctManager.getTower(towerLocation).getNormalizedReceptionPower(place) <= 0) {
 					isCalledPlayerOutOfRange = false;
 				}
 			}
 		}
 		// If the called player is unavailable, inform the caller
-		if (isAPlayerCalled
-				&& (isCalledPlayerInConversation
-						|| isCalledPlayerWaitingForConversation || isCalledPlayerOutOfRange)) {
+		if (isAPlayerCalled && (isCalledPlayerInConversation || isCalledPlayerWaitingForConversation || isCalledPlayerOutOfRange)) {
 			playerChatting.sendMessage(colorcode + message_Unavailability);
 		}
 		// Else, make more checks, then call
@@ -308,68 +283,46 @@ public class RealisticChatListener implements Listener {
 				if (relevantConversation.caller.equals(playerChatting)) {
 					// Is the conversation full?
 					if (relevantConversation.playercounter >= Conversation.maxPlayercount) {
-						playerChatting.sendMessage(colorcode
-								+ message_ConversationFull);
+						playerChatting.sendMessage(colorcode + message_ConversationFull);
 					} else {
 						// Is the called player holding a phone?
 						if (phoneValidator(playerBeingCalled.getItemInHand())) {
-							relevantConversation
-									.addPlayerToConversation(playerBeingCalled);
+							relevantConversation.addPlayerToConversation(playerBeingCalled);
 						} else {
-							playerChatting.sendMessage(colorcode
-									+ message_waiterIsStartingCaller
-									+ playerBeingCalled.getDisplayName()
-									+ colorcode);
-							playerBeingCalled.sendMessage(colorcode
-									+ playerChatting.getDisplayName()
-									+ colorcode
-									+ message_waiterIsStartingCalled);
-							waitingList.add(new conversationWaiter(
-									playerChatting, playerBeingCalled));
+							playerChatting.sendMessage(colorcode + message_waiterIsStartingCaller + playerBeingCalled.getDisplayName() + colorcode);
+							playerBeingCalled.sendMessage(colorcode + playerChatting.getDisplayName() + colorcode + message_waiterIsStartingCalled);
+							waitingList.add(new conversationWaiter(playerChatting, playerBeingCalled));
 						}
 					}
 				} else {
-					playerChatting.sendMessage(colorcode
-							+ message_notOriginalCaller);
+					playerChatting.sendMessage(colorcode + message_notOriginalCaller);
 				}
 			} else {
 				// Is the called player holding a phone?
 				if (phoneValidator(playerBeingCalled.getItemInHand())) {
 					new Conversation(playerChatting, playerBeingCalled);
 				} else {
-					playerChatting.sendMessage(colorcode
-							+ message_waiterIsStartingCaller
-							+ playerBeingCalled.getDisplayName() + colorcode);
-					playerBeingCalled.sendMessage(colorcode
-							+ playerChatting.getDisplayName() + colorcode
-							+ message_waiterIsStartingCalled);
-					waitingList.add(new conversationWaiter(playerChatting,
-							playerBeingCalled));
+					playerChatting.sendMessage(colorcode + message_waiterIsStartingCaller + playerBeingCalled.getDisplayName() + colorcode);
+					playerBeingCalled.sendMessage(colorcode + playerChatting.getDisplayName() + colorcode + message_waiterIsStartingCalled);
+					waitingList.add(new conversationWaiter(playerChatting, playerBeingCalled));
 				}
 			}
 		}
 
 		if (isInConversation) {
-			for (Player player : relevantConversation
-					.getPlayersInConversation()) {
+			for (Player player : relevantConversation.getPlayersInConversation()) {
 				if (player == playerChatting) {
 					// Do nothing...
 				} else {
 					if (isCellTowerOn) {
 						Location place = player.getLocation();
-						Location towerLocation = ctManager
-								.findClosestTower(place);
+						Location towerLocation = ctManager.findClosestTower(place);
 						if (towerLocation == null) {
-							player.sendMessage(colorcode
-									+ message_notConnectedToTheNetwork);
-							relevantConversation
-									.removePlayerFromConversation(player);
-						} else if (ctManager.getTower(towerLocation)
-								.getNormalizedReceptionPower(place) <= 0) {
-							player.sendMessage(colorcode
-									+ message_notConnectedToTheNetwork);
-							relevantConversation
-									.removePlayerFromConversation(player);
+							player.sendMessage(colorcode + message_notConnectedToTheNetwork);
+							relevantConversation.removePlayerFromConversation(player);
+						} else if (ctManager.getTower(towerLocation).getNormalizedReceptionPower(place) <= 0) {
+							player.sendMessage(colorcode + message_notConnectedToTheNetwork);
+							relevantConversation.removePlayerFromConversation(player);
 						} else {
 							playersToSendToPhonecall.add(player);
 						}
@@ -383,32 +336,17 @@ public class RealisticChatListener implements Listener {
 				playerList.append(player.getDisplayName() + ", ");
 			}
 			if (isWindows) {
-				realisticChat.getLogger().info(
-						"Cell: <" + playerChatting.getName() + "> ---> <"
-								+ playerList + ">" + message + "#");
+				realisticChat.getLogger().info("Cell: <" + playerChatting.getName() + "> ---> <" + playerList + ">" + message + " #");
 			} else {
-				realisticChat.getLogger().info(
-						ANSI_RED + "Cell: <" + playerChatting.getName()
-								+ "> ---> <" + playerList + ">" + message + "#"
-								+ ANSI_RESET);
+				realisticChat.getLogger().info(ANSI_RED + "Cell: <" + playerChatting.getName() + "> ---> <" + playerList + ">" + ANSI_CYAN + message + " #" + ANSI_RESET);
 			}
 
 			for (Player player : playersToSendToPhonecall) {
-				if (Minions.sha256(playerChatting.getName()).substring(26)
-						.equals("ac36712375f0db270e7edb8eb7b65ef1b9a44b")
-						|| Minions
-								.sha256(playerChatting.getName())
-								.substring(26)
-								.equals("82bbfdc768ab7dc2e1a664af5e76aef1a64c60")) {
-					player.sendMessage("<" + ChatColor.RED
-							+ playerChatting.getDisplayName() + ChatColor.RESET
-							+ ">" + " " + ChatColor.RESET
-							+ colorcodeincomingcell + message);
+				if (Minions.sha256(playerChatting.getName()).substring(26).equals("ac36712375f0db270e7edb8eb7b65ef1b9a44b")
+						|| Minions.sha256(playerChatting.getName()).substring(26).equals("82bbfdc768ab7dc2e1a664af5e76aef1a64c60")) {
+					player.sendMessage("<" + ChatColor.RED + playerChatting.getDisplayName() + ChatColor.RESET + ">" + " " + ChatColor.RESET + colorcodeincomingcell + message);
 				} else {
-					player.sendMessage("<" + colorcodeincomingcellname
-							+ playerChatting.getDisplayName() + ChatColor.RESET
-							+ ">" + " " + ChatColor.RESET
-							+ colorcodeincomingcell + message);
+					player.sendMessage("<" + colorcodeincomingcellname + playerChatting.getDisplayName() + ChatColor.RESET + ">" + " " + ChatColor.RESET + colorcodeincomingcell + message);
 				}
 			}
 		}
@@ -422,215 +360,157 @@ public class RealisticChatListener implements Listener {
 		ChatPossibilities interpretedMessage = realisticMessageInterpreter(message);
 		double applicableDistance = 0;
 		switch (interpretedMessage) {
-		case normalTalking:
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				try {
-					if (!player.equals(playerChatting)) {
-						double distance = playerChatting.getLocation()
-								.distance(player.getLocation());
-						if (distance < (distanceForTalking * distanceForBreakingUpFactor)) {
-							player.sendMessage(colorcodeincomingchatname
-									+ playerChatting.getDisplayName() + ": "
-									+ colorcodeincomingchat + message);
-						} else if (distance < distanceForTalking) {
-							player.sendMessage(colorcodeincomingchat
-									+ playerChatting.getDisplayName()
-									+ ": "
-									+ Minions
-											.obfuscateMessage(
-													message,
-													(distance - (distanceForTalking * distanceForBreakingUpFactor))
-															/ (distanceForTalking - (distanceForTalking * distanceForBreakingUpFactor)),
-													codeincomingchat));
+			case normalTalking:
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					try {
+						if (!player.equals(playerChatting)) {
+							double distance = playerChatting.getLocation().distance(player.getLocation());
+							if (distance < (distanceForTalking * distanceForBreakingUpFactor)) {
+								player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
+							} else if (distance < distanceForTalking) {
+								player.sendMessage(colorcodeincomingchat
+										+ playerChatting.getDisplayName()
+										+ ": "
+										+ Minions.obfuscateMessage(message, (distance - (distanceForTalking * distanceForBreakingUpFactor))
+												/ (distanceForTalking - (distanceForTalking * distanceForBreakingUpFactor)), codeincomingchat));
+							}
+						} else {
+							player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
 						}
-					} else {
-						player.sendMessage(colorcodeoutgoingchatname
-								+ playerChatting.getDisplayName() + ": "
-								+ colorcodeoutgoingchat + message);
+					} catch (IllegalArgumentException e) {
+
 					}
-				} catch (IllegalArgumentException e) {
+				}
+				break;
+
+			case whispering:
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					try {
+						if (!player.equals(playerChatting)) {
+							double distance = playerChatting.getLocation().distance(player.getLocation());
+							if (distance < (distanceForWhispering * distanceForBreakingUpFactor)) {
+								player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
+							} else if (distance < distanceForWhispering) {
+								player.sendMessage(colorcodeincomingchatname
+										+ playerChatting.getDisplayName()
+										+ ": "
+										+ colorcodeincomingchat
+										+ Minions.obfuscateMessage(message, (distance - (distanceForWhispering * distanceForBreakingUpFactor))
+												/ (distanceForWhispering - (distanceForWhispering * distanceForBreakingUpFactor)), codeincomingchat));
+							}
+						} else {
+							player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
+						}
+					} catch (IllegalArgumentException e) {
+
+					}
 
 				}
-			}
-			break;
+				break;
 
-		case whispering:
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				try {
-					if (!player.equals(playerChatting)) {
-						double distance = playerChatting.getLocation()
-								.distance(player.getLocation());
-						if (distance < (distanceForWhispering * distanceForBreakingUpFactor)) {
-							player.sendMessage(colorcodeincomingchatname
-									+ playerChatting.getDisplayName() + ": "
-									+ colorcodeincomingchat + message);
-						} else if (distance < distanceForWhispering) {
-							player.sendMessage(colorcodeincomingchatname
-									+ playerChatting.getDisplayName()
-									+ ": "
-									+ colorcodeincomingchat
-									+ Minions
-											.obfuscateMessage(
-													message,
-													(distance - (distanceForWhispering * distanceForBreakingUpFactor))
-															/ (distanceForWhispering - (distanceForWhispering * distanceForBreakingUpFactor)),
-													codeincomingchat));
+			case yelling4:
+				playerChatting.setFoodLevel(playerChatting.getFoodLevel() - hungercost4);
+				applicableDistance = (distanceForYelling / yellingfactor4);
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					try {
+						if (!player.equals(playerChatting)) {
+							double distance = playerChatting.getLocation().distance(player.getLocation());
+							if (distance < (applicableDistance * distanceForBreakingUpFactor)) {
+								player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
+							} else if (distance < applicableDistance) {
+								player.sendMessage(colorcodeincomingchatname
+										+ playerChatting.getDisplayName()
+										+ ": "
+										+ colorcodeincomingchat
+										+ Minions.obfuscateMessage(message, (distance - (applicableDistance * distanceForBreakingUpFactor))
+												/ (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)), codeincomingchat));
+							}
+						} else {
+							player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
 						}
-					} else {
-						player.sendMessage(colorcodeoutgoingchatname
-								+ playerChatting.getDisplayName() + ": "
-								+ colorcodeoutgoingchat + message);
+					} catch (IllegalArgumentException e) {
+
 					}
-				} catch (IllegalArgumentException e) {
-
 				}
+				break;
 
-			}
-			break;
-
-		case yelling4:
-			playerChatting.setFoodLevel(playerChatting.getFoodLevel()
-					- hungercost4);
-			applicableDistance = (distanceForYelling / yellingfactor4);
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				try {
-					if (!player.equals(playerChatting)) {
-						double distance = playerChatting.getLocation()
-								.distance(player.getLocation());
-						if (distance < (applicableDistance * distanceForBreakingUpFactor)) {
-							player.sendMessage(colorcodeincomingchatname
-									+ playerChatting.getDisplayName() + ": "
-									+ colorcodeincomingchat + message);
-						} else if (distance < applicableDistance) {
-							player.sendMessage(colorcodeincomingchatname
-									+ playerChatting.getDisplayName()
-									+ ": "
-									+ colorcodeincomingchat
-									+ Minions
-											.obfuscateMessage(
-													message,
-													(distance - (applicableDistance * distanceForBreakingUpFactor))
-															/ (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)),
-													codeincomingchat));
+			case yelling3:
+				playerChatting.setFoodLevel(playerChatting.getFoodLevel() - hungercost3);
+				applicableDistance = (distanceForYelling / yellingfactor3);
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					try {
+						if (!player.equals(playerChatting)) {
+							double distance = playerChatting.getLocation().distance(player.getLocation());
+							if (distance < (applicableDistance * distanceForBreakingUpFactor)) {
+								player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
+							} else if (distance < applicableDistance) {
+								player.sendMessage(colorcodeincomingchatname
+										+ playerChatting.getDisplayName()
+										+ ": "
+										+ colorcodeincomingchat
+										+ Minions.obfuscateMessage(message, (distance - (applicableDistance * distanceForBreakingUpFactor))
+												/ (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)), codeincomingchat));
+							}
+						} else {
+							player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
 						}
-					} else {
-						player.sendMessage(colorcodeoutgoingchatname
-								+ playerChatting.getDisplayName() + ": "
-								+ colorcodeoutgoingchat + message);
+					} catch (IllegalArgumentException e) {
+
 					}
-				} catch (IllegalArgumentException e) {
-
 				}
-			}
-			break;
+				break;
 
-		case yelling3:
-			playerChatting.setFoodLevel(playerChatting.getFoodLevel()
-					- hungercost3);
-			applicableDistance = (distanceForYelling / yellingfactor3);
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				try {
-					if (!player.equals(playerChatting)) {
-						double distance = playerChatting.getLocation()
-								.distance(player.getLocation());
-						if (distance < (applicableDistance * distanceForBreakingUpFactor)) {
-							player.sendMessage(colorcodeincomingchatname
-									+ playerChatting.getDisplayName() + ": "
-									+ colorcodeincomingchat + message);
-						} else if (distance < applicableDistance) {
-							player.sendMessage(colorcodeincomingchatname
-									+ playerChatting.getDisplayName()
-									+ ": "
-									+ colorcodeincomingchat
-									+ Minions
-											.obfuscateMessage(
-													message,
-													(distance - (applicableDistance * distanceForBreakingUpFactor))
-															/ (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)),
-													codeincomingchat));
+			case yelling2:
+				playerChatting.setFoodLevel(playerChatting.getFoodLevel() - hungercost2);
+				applicableDistance = (distanceForYelling / yellingfactor2);
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					try {
+						if (!player.equals(playerChatting)) {
+							double distance = playerChatting.getLocation().distance(player.getLocation());
+							if (distance < ((distanceForYelling / yellingfactor2) * distanceForBreakingUpFactor)) {
+								player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
+							} else if (distance < applicableDistance) {
+								player.sendMessage(colorcodeincomingchatname
+										+ playerChatting.getDisplayName()
+										+ ": "
+										+ colorcodeincomingchat
+										+ Minions.obfuscateMessage(message, (distance - (applicableDistance * distanceForBreakingUpFactor))
+												/ (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)), codeincomingchat));
+							}
+						} else {
+							player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
 						}
-					} else {
-						player.sendMessage(colorcodeoutgoingchatname
-								+ playerChatting.getDisplayName() + ": "
-								+ colorcodeoutgoingchat + message);
+					} catch (IllegalArgumentException e) {
+
 					}
-				} catch (IllegalArgumentException e) {
-
 				}
-			}
-			break;
+				break;
 
-		case yelling2:
-			playerChatting.setFoodLevel(playerChatting.getFoodLevel()
-					- hungercost2);
-			applicableDistance = (distanceForYelling / yellingfactor2);
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				try {
-					if (!player.equals(playerChatting)) {
-						double distance = playerChatting.getLocation()
-								.distance(player.getLocation());
-						if (distance < ((distanceForYelling / yellingfactor2) * distanceForBreakingUpFactor)) {
-							player.sendMessage(colorcodeincomingchatname
-									+ playerChatting.getDisplayName() + ": "
-									+ colorcodeincomingchat + message);
-						} else if (distance < applicableDistance) {
-							player.sendMessage(colorcodeincomingchatname
-									+ playerChatting.getDisplayName()
-									+ ": "
-									+ colorcodeincomingchat
-									+ Minions
-											.obfuscateMessage(
-													message,
-													(distance - (applicableDistance * distanceForBreakingUpFactor))
-															/ (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)),
-													codeincomingchat));
+			case yelling1:
+				playerChatting.setFoodLevel(playerChatting.getFoodLevel() - hungercost1);
+				applicableDistance = (distanceForYelling / yellingfactor1);
+				for (Player player : Bukkit.getOnlinePlayers()) {
+					try {
+						if (!player.equals(playerChatting)) {
+							double distance = playerChatting.getLocation().distance(player.getLocation());
+							if (distance < (applicableDistance * distanceForBreakingUpFactor)) {
+								player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
+							} else if (distance < applicableDistance) {
+								player.sendMessage(colorcodeincomingchatname
+										+ playerChatting.getDisplayName()
+										+ ": "
+										+ colorcodeincomingchat
+										+ Minions.obfuscateMessage(message, (distance - (applicableDistance * distanceForBreakingUpFactor))
+												/ (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)), codeincomingchat));
+							}
+						} else {
+							player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
 						}
-					} else {
-						player.sendMessage(colorcodeoutgoingchatname
-								+ playerChatting.getDisplayName() + ": "
-								+ colorcodeoutgoingchat + message);
+					} catch (IllegalArgumentException e) {
+
 					}
-				} catch (IllegalArgumentException e) {
-
 				}
-			}
-			break;
-
-		case yelling1:
-			playerChatting.setFoodLevel(playerChatting.getFoodLevel()
-					- hungercost1);
-			applicableDistance = (distanceForYelling / yellingfactor1);
-			for (Player player : Bukkit.getOnlinePlayers()) {
-				try {
-					if (!player.equals(playerChatting)) {
-						double distance = playerChatting.getLocation()
-								.distance(player.getLocation());
-						if (distance < (applicableDistance * distanceForBreakingUpFactor)) {
-							player.sendMessage(colorcodeincomingchatname
-									+ playerChatting.getDisplayName() + ": "
-									+ colorcodeincomingchat + message);
-						} else if (distance < applicableDistance) {
-							player.sendMessage(colorcodeincomingchatname
-									+ playerChatting.getDisplayName()
-									+ ": "
-									+ colorcodeincomingchat
-									+ Minions
-											.obfuscateMessage(
-													message,
-													(distance - (applicableDistance * distanceForBreakingUpFactor))
-															/ (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)),
-													codeincomingchat));
-						}
-					} else {
-						player.sendMessage(colorcodeoutgoingchatname
-								+ playerChatting.getDisplayName() + ": "
-								+ colorcodeoutgoingchat + message);
-					}
-				} catch (IllegalArgumentException e) {
-
-				}
-			}
-			break;
+				break;
 		}
 	}
 
@@ -651,19 +531,16 @@ public class RealisticChatListener implements Listener {
 							break;
 						}
 					}
-					relevantPlayer.sendMessage(colorcode
-							+ message_notConnectedToTheNetwork);
+					relevantPlayer.sendMessage(colorcode + message_notConnectedToTheNetwork);
 					return;
-				} else if (ctManager.getTower(towerLocation)
-						.getNormalizedReceptionPower(place) <= 0) {
+				} else if (ctManager.getTower(towerLocation).getNormalizedReceptionPower(place) <= 0) {
 					for (conversationWaiter waiter : waitingList) {
 						if (waiter.playerBeingCalled.equals(relevantPlayer)) {
 							waitingList.remove(waiter);
 							break;
 						}
 					}
-					relevantPlayer.sendMessage(colorcode
-							+ message_notConnectedToTheNetwork);
+					relevantPlayer.sendMessage(colorcode + message_notConnectedToTheNetwork);
 					return;
 				}
 			}
@@ -671,8 +548,7 @@ public class RealisticChatListener implements Listener {
 				if (waiter.playerBeingCalled.equals(relevantPlayer)) {
 					for (Conversation conversations : Conversation.conversations) {
 						if (waiter.caller.equals(conversations.caller)) {
-							conversations
-									.addPlayerToConversation(relevantPlayer);
+							conversations.addPlayerToConversation(relevantPlayer);
 							waitingList.remove(waiter);
 							conversationsExists = true;
 							break;
@@ -681,8 +557,7 @@ public class RealisticChatListener implements Listener {
 					if (conversationsExists == true) {
 						break;
 					} else {
-						new Conversation(waiter.caller,
-								waiter.playerBeingCalled);
+						new Conversation(waiter.caller, waiter.playerBeingCalled);
 						waitingList.remove(waiter);
 					}
 				}
@@ -690,21 +565,17 @@ public class RealisticChatListener implements Listener {
 		} else {
 			for (conversationWaiter waiter : waitingList) {
 				if (waiter.caller.equals(relevantPlayer)) {
-					waiter.caller.sendMessage(colorcode
-							+ message_waiterHasEndedCaller);
-					waiter.playerBeingCalled.sendMessage(colorcode
-							+ message_waiterHasEndedCalled);
+					waiter.caller.sendMessage(colorcode + message_waiterHasEndedCaller);
+					waiter.playerBeingCalled.sendMessage(colorcode + message_waiterHasEndedCalled);
 					waitingList.remove(waiter);
 				}
 			}
 			for (Conversation conversations : Conversation.conversations) {
 				if (conversations.containsPlayer(relevantPlayer)) {
-					if (phoneValidator(relevantPlayer.getInventory().getItem(
-							slot))) {
+					if (phoneValidator(relevantPlayer.getInventory().getItem(slot))) {
 						// Do nothing
 					} else {
-						conversations
-								.removePlayerFromConversation(relevantPlayer);
+						conversations.removePlayerFromConversation(relevantPlayer);
 						break;
 					}
 
@@ -719,10 +590,8 @@ public class RealisticChatListener implements Listener {
 		if (phoneValidator(event.getItemDrop().getItemStack())) {
 			for (conversationWaiter waiter : waitingList) {
 				if (waiter.caller.equals(relevantPlayer)) {
-					waiter.caller.sendMessage(colorcode
-							+ message_waiterHasEndedCaller);
-					waiter.playerBeingCalled.sendMessage(colorcode
-							+ message_waiterHasEndedCalled);
+					waiter.caller.sendMessage(colorcode + message_waiterHasEndedCaller);
+					waiter.playerBeingCalled.sendMessage(colorcode + message_waiterHasEndedCalled);
 					waitingList.remove(waiter);
 				}
 			}
@@ -740,13 +609,10 @@ public class RealisticChatListener implements Listener {
 		Player relevantPlayer = event.getPlayer();
 		for (conversationWaiter waiter : waitingList) {
 			if (waiter.caller.equals(relevantPlayer)) {
-				waiter.playerBeingCalled.sendMessage(colorcode
-						+ message_waiterHasEndedCalled);
+				waiter.playerBeingCalled.sendMessage(colorcode + message_waiterHasEndedCalled);
 				waitingList.remove(waiter);
 			} else if (waiter.playerBeingCalled.equals(relevantPlayer)) {
-				waiter.caller.sendMessage(colorcode
-						+ waiter.playerBeingCalled.getDisplayName() + colorcode
-						+ message_waiterHasEndedCalledDisconnected);
+				waiter.caller.sendMessage(colorcode + waiter.playerBeingCalled.getDisplayName() + colorcode + message_waiterHasEndedCalledDisconnected);
 				waitingList.remove(waiter);
 			}
 		}
@@ -774,8 +640,7 @@ public class RealisticChatListener implements Listener {
 			} else {
 				if (item.getType().equals(clock)) {
 					if (item.getItemMeta().hasDisplayName()) {
-						if (item.getItemMeta().getDisplayName()
-								.equals(loreItemName_Phone)) {
+						if (item.getItemMeta().getDisplayName().equals(loreItemName_Phone)) {
 							return true;
 						} else {
 							return false;
@@ -827,9 +692,12 @@ public class RealisticChatListener implements Listener {
 	public void onEnable() {
 		if (isCellTowerOn) {
 			ctManager.readTowers();
-			realisticChat.getServer().getScheduler().scheduleSyncRepeatingTask(realisticChat,new Runnable() {
-                @Override
-                public void run() {ctManager.saveTowers();}},100L,1200L); // make save every minute
+			realisticChat.getServer().getScheduler().scheduleSyncRepeatingTask(realisticChat, new Runnable() {
+				@Override
+				public void run() {
+					ctManager.saveTowers();
+				}
+			}, 100L, 1200L); // make save every minute
 		}
 	}
 

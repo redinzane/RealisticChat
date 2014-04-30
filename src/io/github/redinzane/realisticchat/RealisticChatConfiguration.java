@@ -104,8 +104,7 @@ public class RealisticChatConfiguration {
 	 * @returnColorcode
 	 */
 	public String getColorcode() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				COLORCODE_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(COLORCODE_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -119,8 +118,7 @@ public class RealisticChatConfiguration {
 	 * @returnColorcode
 	 */
 	public String getColorcodeIncomingChat() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				COLORCODEINCOMINGCHAT_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(COLORCODEINCOMINGCHAT_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -134,8 +132,7 @@ public class RealisticChatConfiguration {
 	 * @returnColorcode
 	 */
 	public String getColorcodeOutgoingChat() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				COLORCODEOUTGOINGCHAT_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(COLORCODEOUTGOINGCHAT_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -149,8 +146,7 @@ public class RealisticChatConfiguration {
 	 * @returnColorcode
 	 */
 	public String getColorcodeIncomingCell() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				COLORCODEINCOMINGCELL_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(COLORCODEINCOMINGCELL_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -164,8 +160,7 @@ public class RealisticChatConfiguration {
 	 * @returnColorcode
 	 */
 	public String getColorcodeOutgoingCell() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				COLORCODEOUTGOINGCELL_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(COLORCODEOUTGOINGCELL_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -179,8 +174,7 @@ public class RealisticChatConfiguration {
 	 * @returnColorcode
 	 */
 	public String getColorcodeIncomingChatName() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				COLORCODEINCOMINGCHATNAME_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(COLORCODEINCOMINGCHATNAME_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -194,8 +188,7 @@ public class RealisticChatConfiguration {
 	 * @returnColorcode
 	 */
 	public String getColorcodeOutgoingChatName() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				COLORCODEOUTGOINGCHATNAME_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(COLORCODEOUTGOINGCHATNAME_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -209,8 +202,7 @@ public class RealisticChatConfiguration {
 	 * @returnColorcode
 	 */
 	public String getColorcodeIncomingCellName() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				COLORCODEINCOMINGCELLNAME_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(COLORCODEINCOMINGCELLNAME_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -224,8 +216,7 @@ public class RealisticChatConfiguration {
 	 * @returnColorcode
 	 */
 	public String getColorcodeOutgoingCellName() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				COLORCODEOUTGOINGCELLNAME_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(COLORCODEOUTGOINGCELLNAME_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -239,8 +230,7 @@ public class RealisticChatConfiguration {
 	 * @return Message including Colorcode
 	 */
 	public String getConversationFullMessage() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				CONVERSATIONFULL_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(CONVERSATIONFULL_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -254,8 +244,7 @@ public class RealisticChatConfiguration {
 	 * @return Message including Colorcode
 	 */
 	public String getNotOriginalCallerMessage() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				NOTORIGINALCALLER_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(NOTORIGINALCALLER_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -269,8 +258,7 @@ public class RealisticChatConfiguration {
 	 * @return Message including Colorcode
 	 */
 	public String getUnavailabilityMessage() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				UNAVAILABILITY_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(UNAVAILABILITY_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -284,8 +272,7 @@ public class RealisticChatConfiguration {
 	 * @return Message including Colorcode
 	 */
 	public String getWaiterHasEndedCalledMessage() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				WAITERHASENDEDCALLED_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(WAITERHASENDEDCALLED_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -299,8 +286,7 @@ public class RealisticChatConfiguration {
 	 * @return Message including Colorcode
 	 */
 	public String getWaiterHasEndedCallerMessage() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				WAITERHASENDEDCALLER_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(WAITERHASENDEDCALLER_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -314,8 +300,7 @@ public class RealisticChatConfiguration {
 	 * @return Message including Colorcode
 	 */
 	public String getWaiterHasEndedCalledDisconnectedMessage() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				WAITERHASENDEDCALLEDDISCONNECTED_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(WAITERHASENDEDCALLEDDISCONNECTED_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -329,8 +314,7 @@ public class RealisticChatConfiguration {
 	 * @return Message including Colorcode
 	 */
 	public String getWaiterIsStartingCalledMessage() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				WAITERISSTARTINGCALLED_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(WAITERISSTARTINGCALLED_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -344,8 +328,7 @@ public class RealisticChatConfiguration {
 	 * @return Message including Colorcode
 	 */
 	public String getWaiterIsStartingCallerMessage() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				WAITERISSTARTINGCALLER_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(WAITERISSTARTINGCALLER_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -359,8 +342,7 @@ public class RealisticChatConfiguration {
 	 * @return Message including Colorcode
 	 */
 	public String getConversationEstablishedMessage() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				CONVERSATIONESTABLISHED_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(CONVERSATIONESTABLISHED_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -374,8 +356,7 @@ public class RealisticChatConfiguration {
 	 * @return Message including Colorcode
 	 */
 	public String getDisconnectMessage() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				DISCONNECT_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(DISCONNECT_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -389,8 +370,7 @@ public class RealisticChatConfiguration {
 	 * @return Message including Colorcode
 	 */
 	public String getPlayerAddedMessage() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				PLAYERADDED_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(PLAYERADDED_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -404,8 +384,7 @@ public class RealisticChatConfiguration {
 	 * @return Message including Colorcode
 	 */
 	public String getPlayerRemovedMessage() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				PLAYERREMOVED_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(PLAYERREMOVED_KEY);
 		if (value == null) {
 			return "";
 		} else {
@@ -420,8 +399,7 @@ public class RealisticChatConfiguration {
 	 * @return value - new value.
 	 */
 	public boolean getChatBoolean() {
-		boolean value = getSectionOrDefault(SECTION_FEATURES).getBoolean(
-				REALISTICCHAT_KEY);
+		boolean value = getSectionOrDefault(SECTION_FEATURES).getBoolean(REALISTICCHAT_KEY);
 
 		return value;
 	}
@@ -442,8 +420,7 @@ public class RealisticChatConfiguration {
 	 * @return value - new value.
 	 */
 	public boolean getCellBoolean() {
-		boolean value = getSectionOrDefault(SECTION_FEATURES).getBoolean(
-				CELL_KEY);
+		boolean value = getSectionOrDefault(SECTION_FEATURES).getBoolean(CELL_KEY);
 
 		return value;
 	}
@@ -464,8 +441,7 @@ public class RealisticChatConfiguration {
 	 * @return value - new value.
 	 */
 	public boolean getLoreBoolean() {
-		boolean value = getSectionOrDefault(SECTION_FEATURES).getBoolean(
-				LORE_KEY);
+		boolean value = getSectionOrDefault(SECTION_FEATURES).getBoolean(LORE_KEY);
 
 		return value;
 	}
@@ -486,8 +462,7 @@ public class RealisticChatConfiguration {
 	 * @return value - new value.
 	 */
 	public boolean getCelltowerBoolean() {
-		boolean value = getSectionOrDefault(SECTION_FEATURES).getBoolean(
-				CELLTOWER_KEY);
+		boolean value = getSectionOrDefault(SECTION_FEATURES).getBoolean(CELLTOWER_KEY);
 
 		return value;
 	}
@@ -509,8 +484,7 @@ public class RealisticChatConfiguration {
 	 * @return distance in blocks.
 	 */
 	public int getDistanceForWhispering() {
-		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(
-				DISTANCEFORWHISPERING_KEY);
+		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(DISTANCEFORWHISPERING_KEY);
 
 		if (value < 0)
 			return DEFAULT_DISTANCEFORWHISPERING;
@@ -525,8 +499,7 @@ public class RealisticChatConfiguration {
 	 *            - new distance.
 	 */
 	public void setDistanceForWhispering(int value) {
-		getSectionOrDefault(SECTION_NUMBERS).set(DISTANCEFORWHISPERING_KEY,
-				value);
+		getSectionOrDefault(SECTION_NUMBERS).set(DISTANCEFORWHISPERING_KEY, value);
 	}
 
 	/**
@@ -535,8 +508,7 @@ public class RealisticChatConfiguration {
 	 * @return distance in blocks.
 	 */
 	public int getDistanceForTalking() {
-		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(
-				DISTANCEFORTALKING_KEY);
+		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(DISTANCEFORTALKING_KEY);
 
 		if (value < 0)
 			return DEFAULT_DISTANCEFORTALKING;
@@ -560,8 +532,7 @@ public class RealisticChatConfiguration {
 	 * @return Distance in blocks.
 	 */
 	public int getDistanceForYelling() {
-		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(
-				DISTANCEFORYELLING_KEY);
+		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(DISTANCEFORYELLING_KEY);
 
 		if (value < 0)
 			return DEFAULT_DISTANCEFORYELLING;
@@ -585,8 +556,7 @@ public class RealisticChatConfiguration {
 	 * @return Distance in blocks.
 	 */
 	public int getDistanceForYelling1() {
-		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(
-				DISTANCEFORYELLING1_KEY);
+		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(DISTANCEFORYELLING1_KEY);
 
 		if (value < 0)
 			return DEFAULT_DISTANCEFORYELLING1;
@@ -601,8 +571,7 @@ public class RealisticChatConfiguration {
 	 *            - new distance.
 	 */
 	public void setDistanceForYelling1(int value) {
-		getSectionOrDefault(SECTION_NUMBERS)
-				.set(DISTANCEFORYELLING1_KEY, value);
+		getSectionOrDefault(SECTION_NUMBERS).set(DISTANCEFORYELLING1_KEY, value);
 	}
 
 	/**
@@ -611,8 +580,7 @@ public class RealisticChatConfiguration {
 	 * @return Distance in blocks.
 	 */
 	public int getDistanceForYelling2() {
-		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(
-				DISTANCEFORYELLING2_KEY);
+		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(DISTANCEFORYELLING2_KEY);
 
 		if (value < 0)
 			return DEFAULT_DISTANCEFORYELLING2;
@@ -627,8 +595,7 @@ public class RealisticChatConfiguration {
 	 *            - new distance.
 	 */
 	public void setDistanceForYelling2(int value) {
-		getSectionOrDefault(SECTION_NUMBERS)
-				.set(DISTANCEFORYELLING2_KEY, value);
+		getSectionOrDefault(SECTION_NUMBERS).set(DISTANCEFORYELLING2_KEY, value);
 	}
 
 	/**
@@ -637,8 +604,7 @@ public class RealisticChatConfiguration {
 	 * @return Distance in blocks.
 	 */
 	public int getDistanceForYelling3() {
-		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(
-				DISTANCEFORYELLING3_KEY);
+		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(DISTANCEFORYELLING3_KEY);
 
 		if (value < 0)
 			return DEFAULT_DISTANCEFORYELLING3;
@@ -653,8 +619,7 @@ public class RealisticChatConfiguration {
 	 *            - new distance.
 	 */
 	public void setDistanceForYelling3(int value) {
-		getSectionOrDefault(SECTION_NUMBERS)
-				.set(DISTANCEFORYELLING3_KEY, value);
+		getSectionOrDefault(SECTION_NUMBERS).set(DISTANCEFORYELLING3_KEY, value);
 	}
 
 	/**
@@ -663,8 +628,7 @@ public class RealisticChatConfiguration {
 	 * @return Distance in blocks.
 	 */
 	public int getDistanceForYelling4() {
-		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(
-				DISTANCEFORYELLING4_KEY);
+		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(DISTANCEFORYELLING4_KEY);
 
 		if (value < 0)
 			return DEFAULT_DISTANCEFORYELLING4;
@@ -679,8 +643,7 @@ public class RealisticChatConfiguration {
 	 *            - new distance.
 	 */
 	public void setDistanceForYelling4(int value) {
-		getSectionOrDefault(SECTION_NUMBERS)
-				.set(DISTANCEFORYELLING4_KEY, value);
+		getSectionOrDefault(SECTION_NUMBERS).set(DISTANCEFORYELLING4_KEY, value);
 	}
 
 	/**
@@ -689,8 +652,7 @@ public class RealisticChatConfiguration {
 	 * @return Hunger cost in points.
 	 */
 	public int getHungerCost1() {
-		int value = getSectionOrDefault(SECTION_NUMBERS)
-				.getInt(HUNGERCOST1_KEY);
+		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(HUNGERCOST1_KEY);
 
 		if (value < 0)
 			return DEFAULT_HUNGERCOST1;
@@ -714,8 +676,7 @@ public class RealisticChatConfiguration {
 	 * @return Hunger cost in points.
 	 */
 	public int getHungerCost2() {
-		int value = getSectionOrDefault(SECTION_NUMBERS)
-				.getInt(HUNGERCOST2_KEY);
+		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(HUNGERCOST2_KEY);
 
 		if (value < 0)
 			return DEFAULT_HUNGERCOST2;
@@ -739,8 +700,7 @@ public class RealisticChatConfiguration {
 	 * @return Hunger cost in points.
 	 */
 	public int getHungerCost3() {
-		int value = getSectionOrDefault(SECTION_NUMBERS)
-				.getInt(HUNGERCOST3_KEY);
+		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(HUNGERCOST3_KEY);
 
 		if (value < 0)
 			return DEFAULT_HUNGERCOST3;
@@ -764,8 +724,7 @@ public class RealisticChatConfiguration {
 	 * @return Hunger cost in points.
 	 */
 	public int getHungerCost4() {
-		int value = getSectionOrDefault(SECTION_NUMBERS)
-				.getInt(HUNGERCOST4_KEY);
+		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(HUNGERCOST4_KEY);
 
 		if (value < 0)
 			return DEFAULT_HUNGERCOST4;
@@ -789,8 +748,7 @@ public class RealisticChatConfiguration {
 	 * @return value - distance.
 	 */
 	public float getDistanceForBreakingUpFactor() {
-		float value = (float) getSectionOrDefault(SECTION_NUMBERS).getDouble(
-				DISTANCEFORBREAKINGUPFACTOR_KEY);
+		float value = (float) getSectionOrDefault(SECTION_NUMBERS).getDouble(DISTANCEFORBREAKINGUPFACTOR_KEY);
 
 		if (value <= 0 || value > 1)
 			return DEFAULT_DISTANCEFORBREAKINGUPFACTOR;
@@ -805,8 +763,7 @@ public class RealisticChatConfiguration {
 	 *            - new distance.
 	 */
 	public void setDistanceForBreakingUpFactor(float value) {
-		getSectionOrDefault(SECTION_NUMBERS).set(
-				DISTANCEFORBREAKINGUPFACTOR_KEY, value);
+		getSectionOrDefault(SECTION_NUMBERS).set(DISTANCEFORBREAKINGUPFACTOR_KEY, value);
 	}
 
 	/**
@@ -815,8 +772,7 @@ public class RealisticChatConfiguration {
 	 * @return value - maxPlayerCount.
 	 */
 	public int getMaxPlayerCount() {
-		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(
-				DISTANCEFORBREAKINGUPFACTOR_KEY);
+		int value = getSectionOrDefault(SECTION_NUMBERS).getInt(DISTANCEFORBREAKINGUPFACTOR_KEY);
 
 		if (value <= 2)
 			return DEFAULT_MAXPLAYERCOUNT;
@@ -831,14 +787,12 @@ public class RealisticChatConfiguration {
 	 *            - new distance.
 	 */
 	public void setMaxPlayerCount(int value) {
-		getSectionOrDefault(SECTION_NUMBERS).set(
-				DISTANCEFORBREAKINGUPFACTOR_KEY, value);
+		getSectionOrDefault(SECTION_NUMBERS).set(DISTANCEFORBREAKINGUPFACTOR_KEY, value);
 	}
 
 	// Cell settings
 	public String getLoreItemPhone() {
-		String value = getSectionOrDefault(SECTION_LOREITEMS).getString(
-				LOREITEMPHONE_KEY);
+		String value = getSectionOrDefault(SECTION_LOREITEMS).getString(LOREITEMPHONE_KEY);
 
 		if (value == null)
 			return DEFAULT_LOREITEMPHONE;
@@ -853,8 +807,7 @@ public class RealisticChatConfiguration {
 	 *            - new distance.
 	 */
 	public void setLoreItemPhone(String value) {
-		getSectionOrDefault(SECTION_NUMBERS).set(LOREITEMPHONE_KEY,
-				ChatColor.translateAlternateColorCodes(COLORCODE, value));
+		getSectionOrDefault(SECTION_NUMBERS).set(LOREITEMPHONE_KEY, ChatColor.translateAlternateColorCodes(COLORCODE, value));
 	}
 
 	// Cell Tower Settings
@@ -865,8 +818,7 @@ public class RealisticChatConfiguration {
 	 * @return value - min height.
 	 */
 	public int getCTMinHeight() {
-		int value = getSectionOrDefault(SECTION_CELLTOWER).getInt(
-				CT_MINHEIGHT_KEY);
+		int value = getSectionOrDefault(SECTION_CELLTOWER).getInt(CT_MINHEIGHT_KEY);
 
 		if (value < 0)
 			return DEFAULT_CT_MIN_HEIGHT;
@@ -880,8 +832,7 @@ public class RealisticChatConfiguration {
 	 * @return value - max height.
 	 */
 	public int getCTMaxHeight() {
-		int value = getSectionOrDefault(SECTION_CELLTOWER).getInt(
-				CT_MAXHEIGHT_KEY);
+		int value = getSectionOrDefault(SECTION_CELLTOWER).getInt(CT_MAXHEIGHT_KEY);
 
 		if (value < 0)
 			return DEFAULT_CT_MAX_HEIGHT;
@@ -895,8 +846,7 @@ public class RealisticChatConfiguration {
 	 * @return value - max range.
 	 */
 	public int getCTMaxRange() {
-		int value = getSectionOrDefault(SECTION_CELLTOWER).getInt(
-				CT_MAXRANGE_KEY);
+		int value = getSectionOrDefault(SECTION_CELLTOWER).getInt(CT_MAXRANGE_KEY);
 
 		if (value < 0)
 			return DEFAULT_CT_MAX_RANGE;
@@ -910,8 +860,7 @@ public class RealisticChatConfiguration {
 	 * @return value - tick period.
 	 */
 	public long getCTTickPeriod() {
-		long value = getSectionOrDefault(SECTION_CELLTOWER).getLong(
-				CT_TICKPERIOD_KEY);
+		long value = getSectionOrDefault(SECTION_CELLTOWER).getLong(CT_TICKPERIOD_KEY);
 
 		if (value < 0)
 			return DEFAULT_CT_TICKPERIOD;
@@ -925,8 +874,7 @@ public class RealisticChatConfiguration {
 	 * @return Base Block
 	 */
 	public String getBaseBlock() {
-		String value = getSectionOrDefault(SECTION_MESSAGES).getString(
-				CT_BASEBLOCK_KEY);
+		String value = getSectionOrDefault(SECTION_MESSAGES).getString(CT_BASEBLOCK_KEY);
 		if (value == null) {
 			return "";
 		} else {

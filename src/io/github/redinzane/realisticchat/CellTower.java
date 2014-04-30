@@ -11,10 +11,13 @@ public class CellTower {
 	protected static int MAX_HEIGHT = 2;
 	protected static int MAX_RANGE;
 	protected static Material BASE_BLOCK = Material.getMaterial("NOTE_BLOCK");
-	private static final int MAX_POWER = 180000; // 180kW, power of a big radio tower in Switzerland. Not an ideal reference, but eh
+	private static final int MAX_POWER = 180000; // 180kW, power of a big radio
+													// tower in Switzerland. Not
+													// an ideal reference, but
+													// eh
 
-	private static final int ALPHA = 100; //Magic value
-	
+	private static final int ALPHA = 100; // Magic value
+
 	// Non-static stuff
 	private Location location;
 	private int maxRange = 0;
@@ -24,8 +27,7 @@ public class CellTower {
 		this.location = location;
 		this.maxRange = 0;
 		if (update()) {
-			location.getWorld().playEffect(location, Effect.MOBSPAWNER_FLAMES,
-					0);
+			location.getWorld().playEffect(location, Effect.MOBSPAWNER_FLAMES, 0);
 		}
 	}
 
@@ -57,7 +59,7 @@ public class CellTower {
 
 		Location base = location.clone(); // start of the antenna
 		int height = calculateHeight(base, WORLD_HEIGHT);
-		base.add(0, height+1, 0);
+		base.add(0, height + 1, 0);
 		if (height < MIN_HEIGHT) {
 			return false; // antenna not high enough
 		}
@@ -69,7 +71,7 @@ public class CellTower {
 		}
 		return true;
 	}
-	
+
 	private static int calculateHeight(Location location, int WORLD_HEIGHT) {
 		Location base = location.clone().add(0, 1, 0); // start of the antenna
 		int height = 0;
@@ -83,7 +85,7 @@ public class CellTower {
 		}
 		return height;
 	}
-	
+
 	public boolean update() {
 		boolean result = validate(this.location);
 		if (result) {
@@ -137,7 +139,6 @@ public class CellTower {
 		}
 		return inversePowerLaw(distance);
 	}
-
 
 	public Location getLocation() {
 		return location;

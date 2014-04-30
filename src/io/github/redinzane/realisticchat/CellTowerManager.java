@@ -33,8 +33,7 @@ public class CellTowerManager implements Listener, Runnable {
 	private int numberOfTowers = 0;
 	public static final String TOWERS_FILE = "celltowers.csv";
 
-	public CellTowerManager(RealisticChatListener RCListener,
-			RealisticChatConfiguration config) {
+	public CellTowerManager(RealisticChatListener RCListener, RealisticChatConfiguration config) {
 		this.RCListener = RCListener;
 
 		String baseBlock = config.getBaseBlock();
@@ -54,8 +53,7 @@ public class CellTowerManager implements Listener, Runnable {
 	public void registerTower(Location location) {
 		if (towers.containsKey(location)) {
 			return;
-		}
-		else if (CellTower.validate(location)) {
+		} else if (CellTower.validate(location)) {
 			towers.put(location, new CellTower(location));
 		}
 	}
@@ -69,8 +67,7 @@ public class CellTowerManager implements Listener, Runnable {
 	}
 
 	public final List<CellTower> getTowers() {
-		return Collections.unmodifiableList(new ArrayList<CellTower>(towers
-				.values()));
+		return Collections.unmodifiableList(new ArrayList<CellTower>(towers.values()));
 	}
 
 	private static final int MAX_BLOCKCHECK = 10;
@@ -92,12 +89,9 @@ public class CellTowerManager implements Listener, Runnable {
 				registerTower(location);
 			}
 
-		} else if (block.getType().equals(Material.REDSTONE_TORCH_ON)
-				|| block.getType().equals(Material.REDSTONE_TORCH_OFF)) {
+		} else if (block.getType().equals(Material.REDSTONE_TORCH_ON) || block.getType().equals(Material.REDSTONE_TORCH_OFF)) {
 			RedstoneTorch torch = (RedstoneTorch) block.getState().getData();
-			location.add(torch.getAttachedFace().getModX(), torch
-					.getAttachedFace().getModY(), torch.getAttachedFace()
-					.getModZ());
+			location.add(torch.getAttachedFace().getModX(), torch.getAttachedFace().getModY(), torch.getAttachedFace().getModZ());
 			if (location.getBlock().getType().equals(CellTower.BASE_BLOCK)) {
 				registerTower(location);
 			}
@@ -106,8 +100,7 @@ public class CellTowerManager implements Listener, Runnable {
 
 	@EventHandler
 	public void rightClick(PlayerInteractEvent event) {
-		if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event
-				.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+		if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
 			return; // only rightclick
 		}
 
@@ -125,10 +118,8 @@ public class CellTowerManager implements Listener, Runnable {
 				player.sendMessage(RCListener.colorcode + RCListener.message_notConnectedToTheNetwork);
 				return;
 			}
-			double power = closestTower.getAntennaGain()*reception;
-			player.sendMessage(RCListener.colorcode + "["
-					+ Minions.powerToString(power) + "] "
-					+ "Connected to the phone network");
+			double power = closestTower.getAntennaGain() * reception;
+			player.sendMessage(RCListener.colorcode + "[" + Minions.powerToString(power) + "] " + "Connected to the phone network");
 
 		}
 	}
@@ -181,14 +172,9 @@ public class CellTowerManager implements Listener, Runnable {
 		if (towers.size() != numberOfTowers) {
 			numberOfTowers = towers.size();
 			if (RCListener.isWindows) {
-				RCListener.realisticChat.getLogger().info(
-						"Number of active Cell Towers: " + numberOfTowers);
+				RCListener.realisticChat.getLogger().info("Number of active Cell Towers: " + numberOfTowers);
 			} else {
-				RCListener.realisticChat.getLogger().info(
-						RealisticChatListener.ANSI_YELLOW
-								+ "Number of active Cell Towers: "
-								+ numberOfTowers
-								+ RealisticChatListener.ANSI_RESET);
+				RCListener.realisticChat.getLogger().info(RealisticChatListener.ANSI_YELLOW + "Number of active Cell Towers: " + numberOfTowers + RealisticChatListener.ANSI_RESET);
 			}
 		}
 	}
@@ -223,7 +209,7 @@ public class CellTowerManager implements Listener, Runnable {
 				try {
 					location = new Location(world, x, y, z);
 					towers.add(location);
-				} catch (Exception e){
+				} catch (Exception e) {
 					RCListener.realisticChat.getLogger().warning("couldn't read line <" + line + "> in towers file");
 				}
 
@@ -236,8 +222,7 @@ public class CellTowerManager implements Listener, Runnable {
 		return towers;
 	}
 
-	private void writeCellTowersToFile(final String filename,
-			final Set<Location> towers) {
+	private void writeCellTowersToFile(final String filename, final Set<Location> towers) {
 		new Thread() {
 			@Override
 			public void run() {
