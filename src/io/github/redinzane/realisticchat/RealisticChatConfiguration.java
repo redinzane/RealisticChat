@@ -869,7 +869,7 @@ public class RealisticChatConfiguration {
 	}
 
 	/**
-	 * Retrieve the base block
+	 * Retrieve the base block.
 	 * 
 	 * @return Base Block
 	 */

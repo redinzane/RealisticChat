@@ -1,8 +1,11 @@
 name: RealisticChat
 main: io.github.redinzane.realisticchat.RealisticChat
-version: 0.5
-description: RealisticChat Plugin Beta. Has RangedChat, Cellphones, Console Logging, Cell Towers
-
-depend:
-
+version: 1.0
+load: startup
+authors: [redinzane, killerofbanshees]
+description: Ranged Chat, Cellphones, Console Logging, Cell Towers, Database of chat. Pretty awesome.
+softdepend: []
+loadbefore: []
+database: true
+prefix: RealisticChat
 permissions:

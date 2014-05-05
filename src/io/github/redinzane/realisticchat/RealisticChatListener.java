@@ -2,6 +2,9 @@ package io.github.redinzane.realisticchat;
 
 import io.github.redinzane.realisticchat.events.CellPhoneCallEvent;
 import io.github.redinzane.realisticchat.events.RealisticChatEvent;
+import io.github.redinzane.realisticchat.minions.ChatMessage;
+import io.github.redinzane.realisticchat.minions.Minions;
+import io.github.redinzane.realisticchat.minions.RealisticChatDAO;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,6 +23,7 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 //import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+
 
 @SuppressWarnings("deprecation")
 public class RealisticChatListener implements Listener {
@@ -40,7 +44,7 @@ public class RealisticChatListener implements Listener {
 	boolean isCellOn;
 	boolean isCellTowerOn;
 	boolean isLoreOn;
-	String loreItemName_Phone;
+	String loreItemNamePhone;
 
 	String colorcode;
 	String colorcodeincomingchat;
@@ -55,21 +59,22 @@ public class RealisticChatListener implements Listener {
 	String colorcodeoutgoingchatname;
 	String colorcodeincomingcellname;
 	String colorcodeoutgoingcellname;
-	String message_Unavailability;
-	String message_ConversationFull;
-	String message_notOriginalCaller;
-	String message_waiterIsStartingCalled;
-	String message_waiterIsStartingCaller;
-	String message_waiterHasEndedCaller;
-	String message_waiterHasEndedCalled;
-	String message_waiterHasEndedCalledDisconnected;
+	String messageUnavailability;
+	String messageConversationFull;
+	String messageNotOriginalCaller;
+	String messageWaiterIsStartingCalled;
+	String messageWaiterIsStartingCaller;
+	String messageWaiterHasEndedCaller;
+	String messageWaiterHasEndedCalled;
+	String messageWaiterHasEndedCalledDisconnected;
 	// TODO: Not in config yet
-	String message_notConnectedToTheNetwork = "You are not connected to the phone network.";
+	String messageNotConnectedToTheNetwork = "You are not connected to the phone network.";
 
 	// Nonconfigurables
-	List<conversationWaiter> waitingList = new LinkedList<conversationWaiter>();
+	List<ConversationWaiter> waitingList = new LinkedList<ConversationWaiter>();
 	public Material clock = Material.getMaterial("WATCH");
 	RealisticChat realisticChat;
+	RealisticChatDAO dao;
 	CellTowerManager ctManager;
 	protected boolean isWindows;
 
@@ -83,7 +88,7 @@ public class RealisticChatListener implements Listener {
 	public static final String ANSI_CYAN = "\u001B[36m";
 	public static final String ANSI_WHITE = "\u001B[37m";
 
-	RealisticChatListener(RealisticChat plugin, RealisticChatConfiguration config) {
+	RealisticChatListener(RealisticChat plugin, RealisticChatDAO rcDAO, RealisticChatConfiguration config) {
 		this.realisticChat = plugin;
 		this.distanceForWhispering = config.getDistanceForWhispering();
 		this.distanceForYelling = config.getDistanceForYelling();
@@ -101,7 +106,7 @@ public class RealisticChatListener implements Listener {
 		this.isCellOn = config.getCellBoolean();
 		this.isCellTowerOn = config.getCelltowerBoolean();
 		this.isLoreOn = config.getLoreBoolean();
-		this.loreItemName_Phone = config.getLoreItemPhone();
+		this.loreItemNamePhone = config.getLoreItemPhone();
 		this.colorcode = config.getColorcode();
 		this.colorcodeincomingchat = config.getColorcodeIncomingChat();
 		this.colorcodeoutgoingchat = config.getColorcodeOutgoingChat();
@@ -116,14 +121,14 @@ public class RealisticChatListener implements Listener {
 		this.colorcodeincomingcellname = config.getColorcodeIncomingCellName();
 		this.colorcodeoutgoingcellname = config.getColorcodeOutgoingCellName();
 
-		this.message_ConversationFull = config.getConversationFullMessage();
-		this.message_notOriginalCaller = config.getNotOriginalCallerMessage();
-		this.message_Unavailability = config.getUnavailabilityMessage();
-		this.message_waiterIsStartingCalled = config.getWaiterIsStartingCalledMessage();
-		this.message_waiterIsStartingCaller = config.getWaiterIsStartingCallerMessage();
-		this.message_waiterHasEndedCaller = config.getWaiterHasEndedCallerMessage();
-		this.message_waiterHasEndedCalled = config.getWaiterHasEndedCalledMessage();
-		this.message_waiterHasEndedCalledDisconnected = config.getWaiterHasEndedCalledDisconnectedMessage();
+		this.messageConversationFull = config.getConversationFullMessage();
+		this.messageNotOriginalCaller = config.getNotOriginalCallerMessage();
+		this.messageUnavailability = config.getUnavailabilityMessage();
+		this.messageWaiterIsStartingCalled = config.getWaiterIsStartingCalledMessage();
+		this.messageWaiterIsStartingCaller = config.getWaiterIsStartingCallerMessage();
+		this.messageWaiterHasEndedCaller = config.getWaiterHasEndedCallerMessage();
+		this.messageWaiterHasEndedCalled = config.getWaiterHasEndedCalledMessage();
+		this.messageWaiterHasEndedCalledDisconnected = config.getWaiterHasEndedCalledDisconnectedMessage();
 
 		Conversation.maxPlayercount = config.getMaxPlayerCount();
 		Conversation.message_ConversationEstablished = config.getConversationEstablishedMessage();
@@ -149,15 +154,15 @@ public class RealisticChatListener implements Listener {
 		}
 	}
 
-	private static boolean isMac(String os) {
+	private static boolean isMac(final String os) {
 		return (os.indexOf("mac") >= 0);
 	}
 
-	private static boolean isWindows(String os) {
+	private static boolean isWindows(final String os) {
 		return (os.indexOf("win") >= 0);
 	}
 
-	private static boolean isUnix(String os) {
+	private static boolean isUnix(final String os) {
 		return (os.indexOf("nux") >= 0);
 	}
 
@@ -165,11 +170,6 @@ public class RealisticChatListener implements Listener {
 	public void onPlayerChat(PlayerChatEvent event) {
 		Player playerChatting = event.getPlayer();
 		String message = event.getMessage();
-		if (isWindows) {
-			realisticChat.getLogger().info("Ranged: <" + playerChatting.getName() + "> " + message + " #");
-		} else {
-			realisticChat.getLogger().info(ANSI_YELLOW + "Ranged: <" + playerChatting.getName() + "> " + ANSI_CYAN + message + " #" + ANSI_RESET);
-		}
 
 		if (isCellOn) {
 			Bukkit.getServer().getPluginManager().callEvent(new CellPhoneCallEvent(playerChatting, message));
@@ -187,7 +187,7 @@ public class RealisticChatListener implements Listener {
 	@EventHandler
 	public void onCellPhoneCall(CellPhoneCallEvent event) {
 		Player playerChatting = event.getPlayer();
-		String message = event.getMessage();
+		final String message = event.getMessage();
 		Player[] onlinePlayers = Bukkit.getOnlinePlayers();
 		List<Player> playersToSendToPhonecall = new ArrayList<Player>();
 		Conversation relevantConversation = null;
@@ -215,13 +215,13 @@ public class RealisticChatListener implements Listener {
 					if (isInConversation) {
 						relevantConversation.removePlayerFromConversation(playerChatting);
 					}
-					playerChatting.sendMessage(colorcode + message_notConnectedToTheNetwork);
+					playerChatting.sendMessage(colorcode + messageNotConnectedToTheNetwork);
 					return;
 				} else if (ctManager.getTower(towerLocation).getNormalizedReceptionPower(place) <= 0) {
 					if (isInConversation) {
 						relevantConversation.removePlayerFromConversation(playerChatting);
 					}
-					playerChatting.sendMessage(colorcode + message_notConnectedToTheNetwork);
+					playerChatting.sendMessage(colorcode + messageNotConnectedToTheNetwork);
 					return;
 				}
 			}
@@ -255,8 +255,8 @@ public class RealisticChatListener implements Listener {
 			}
 		}
 
-		if (isAPlayerCalled == true) {
-			for (conversationWaiter waiter : waitingList) {
+		if (isAPlayerCalled) {
+			for (ConversationWaiter waiter : waitingList) {
 				if (waiter.playerBeingCalled.equals(playerBeingCalled)) {
 					isCalledPlayerWaitingForConversation = true;
 				}
@@ -273,8 +273,8 @@ public class RealisticChatListener implements Listener {
 		}
 		// If the called player is unavailable, inform the caller
 		if (isAPlayerCalled && (isCalledPlayerInConversation || isCalledPlayerWaitingForConversation || isCalledPlayerOutOfRange)) {
-			playerChatting.sendMessage(colorcode + message_Unavailability);
-		}
+			playerChatting.sendMessage(colorcode + messageUnavailability);
+			}
 		// Else, make more checks, then call
 		else if (isAPlayerCalled) {
 			// See if we are already in a conversations
@@ -283,52 +283,50 @@ public class RealisticChatListener implements Listener {
 				if (relevantConversation.caller.equals(playerChatting)) {
 					// Is the conversation full?
 					if (relevantConversation.playercounter >= Conversation.maxPlayercount) {
-						playerChatting.sendMessage(colorcode + message_ConversationFull);
+						playerChatting.sendMessage(colorcode + messageConversationFull);
 					} else {
 						// Is the called player holding a phone?
 						if (phoneValidator(playerBeingCalled.getItemInHand())) {
 							relevantConversation.addPlayerToConversation(playerBeingCalled);
 						} else {
-							playerChatting.sendMessage(colorcode + message_waiterIsStartingCaller + playerBeingCalled.getDisplayName() + colorcode);
-							playerBeingCalled.sendMessage(colorcode + playerChatting.getDisplayName() + colorcode + message_waiterIsStartingCalled);
-							waitingList.add(new conversationWaiter(playerChatting, playerBeingCalled));
+							playerChatting.sendMessage(colorcode + messageWaiterIsStartingCaller + playerBeingCalled.getDisplayName() + colorcode);
+							playerBeingCalled.sendMessage(colorcode + playerChatting.getDisplayName() + colorcode + messageWaiterIsStartingCalled);
+							waitingList.add(new ConversationWaiter(playerChatting, playerBeingCalled));
 						}
 					}
 				} else {
-					playerChatting.sendMessage(colorcode + message_notOriginalCaller);
+					playerChatting.sendMessage(colorcode + messageNotOriginalCaller);
 				}
 			} else {
 				// Is the called player holding a phone?
 				if (phoneValidator(playerBeingCalled.getItemInHand())) {
 					new Conversation(playerChatting, playerBeingCalled);
 				} else {
-					playerChatting.sendMessage(colorcode + message_waiterIsStartingCaller + playerBeingCalled.getDisplayName() + colorcode);
-					playerBeingCalled.sendMessage(colorcode + playerChatting.getDisplayName() + colorcode + message_waiterIsStartingCalled);
-					waitingList.add(new conversationWaiter(playerChatting, playerBeingCalled));
+					playerChatting.sendMessage(colorcode + messageWaiterIsStartingCaller + playerBeingCalled.getDisplayName() + colorcode);
+					playerBeingCalled.sendMessage(colorcode + playerChatting.getDisplayName() + colorcode + messageWaiterIsStartingCalled);
+					waitingList.add(new ConversationWaiter(playerChatting, playerBeingCalled));
 				}
 			}
 		}
 
 		if (isInConversation) {
 			for (Player player : relevantConversation.getPlayersInConversation()) {
-				if (player == playerChatting) {
-					// Do nothing...
-				} else {
-					if (isCellTowerOn) {
-						Location place = player.getLocation();
-						Location towerLocation = ctManager.findClosestTower(place);
-						if (towerLocation == null) {
-							player.sendMessage(colorcode + message_notConnectedToTheNetwork);
-							relevantConversation.removePlayerFromConversation(player);
-						} else if (ctManager.getTower(towerLocation).getNormalizedReceptionPower(place) <= 0) {
-							player.sendMessage(colorcode + message_notConnectedToTheNetwork);
-							relevantConversation.removePlayerFromConversation(player);
-						} else {
-							playersToSendToPhonecall.add(player);
-						}
-					} else {
-						playersToSendToPhonecall.add(player);
-					}
+				if (!player.equals(playerChatting)) {
+				    if (isCellTowerOn) {
+                        Location place = player.getLocation();
+                        Location towerLocation = ctManager.findClosestTower(place);
+                        if (towerLocation == null) {
+                            player.sendMessage(colorcode + messageNotConnectedToTheNetwork);
+                            relevantConversation.removePlayerFromConversation(player);
+                        } else if (ctManager.getTower(towerLocation).getNormalizedReceptionPower(place) <= 0) {
+                            player.sendMessage(colorcode + messageNotConnectedToTheNetwork);
+                            relevantConversation.removePlayerFromConversation(player);
+                        } else {
+                            playersToSendToPhonecall.add(player);
+                        }
+                    } else {
+                        playersToSendToPhonecall.add(player);
+                    }
 				}
 			}
 			StringBuffer playerList = new StringBuffer();
@@ -340,6 +338,8 @@ public class RealisticChatListener implements Listener {
 			} else {
 				realisticChat.getLogger().info(ANSI_RED + "Cell: <" + playerChatting.getName() + "> ---> <" + playerList + ">" + ANSI_CYAN + message + " #" + ANSI_RESET);
 			}
+			ChatMessage msg = new ChatMessage(relevantConversation.uuid, playerChatting.getUniqueId().toString(), playerChatting.getName(), "cell", playerList.toString(), message, System.currentTimeMillis());
+            dao.log(msg);
 
 			for (Player player : playersToSendToPhonecall) {
 				if (Minions.sha256(playerChatting.getName()).substring(26).equals("ac36712375f0db270e7edb8eb7b65ef1b9a44b")
@@ -356,161 +356,85 @@ public class RealisticChatListener implements Listener {
 	public void onRealisticChat(RealisticChatEvent event) {
 		Player playerChatting = event.getPlayer();
 		String message = event.getMessage();
-
 		ChatPossibilities interpretedMessage = realisticMessageInterpreter(message);
 		double applicableDistance = 0;
+		String receivers = null;
+		ChatMessage msg;
+		
 		switch (interpretedMessage) {
 			case normalTalking:
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					try {
-						if (!player.equals(playerChatting)) {
-							double distance = playerChatting.getLocation().distance(player.getLocation());
-							if (distance < (distanceForTalking * distanceForBreakingUpFactor)) {
-								player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
-							} else if (distance < distanceForTalking) {
-								player.sendMessage(colorcodeincomingchat
-										+ playerChatting.getDisplayName()
-										+ ": "
-										+ Minions.obfuscateMessage(message, (distance - (distanceForTalking * distanceForBreakingUpFactor))
-												/ (distanceForTalking - (distanceForTalking * distanceForBreakingUpFactor)), codeincomingchat));
-							}
-						} else {
-							player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
-						}
-					} catch (IllegalArgumentException e) {
-
-					}
-				}
-				break;
+				receivers = chatMessageHandler(playerChatting, message, distanceForTalking);
+				if (isWindows) {
+                    realisticChat.getLogger().info("Talking: <" + playerChatting.getName() + "> " + message + " #");
+                } else {
+                    realisticChat.getLogger().info(ANSI_YELLOW + "Talking: <" + playerChatting.getName() + "> " + ANSI_CYAN + message + " #" + ANSI_RESET);
+                }
+                msg = new ChatMessage("", playerChatting.getUniqueId().toString(), playerChatting.getName(), "talking", receivers, message, System.currentTimeMillis());
+                dao.log(msg);				
+                break;
 
 			case whispering:
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					try {
-						if (!player.equals(playerChatting)) {
-							double distance = playerChatting.getLocation().distance(player.getLocation());
-							if (distance < (distanceForWhispering * distanceForBreakingUpFactor)) {
-								player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
-							} else if (distance < distanceForWhispering) {
-								player.sendMessage(colorcodeincomingchatname
-										+ playerChatting.getDisplayName()
-										+ ": "
-										+ colorcodeincomingchat
-										+ Minions.obfuscateMessage(message, (distance - (distanceForWhispering * distanceForBreakingUpFactor))
-												/ (distanceForWhispering - (distanceForWhispering * distanceForBreakingUpFactor)), codeincomingchat));
-							}
-						} else {
-							player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
-						}
-					} catch (IllegalArgumentException e) {
-
-					}
-
-				}
-				break;
+			    receivers = chatMessageHandler(playerChatting, message, distanceForWhispering);
+				if (isWindows) {
+                    realisticChat.getLogger().info("Whispering: <" + playerChatting.getName() + "> " + message + " #");
+                } else {
+                    realisticChat.getLogger().info(ANSI_YELLOW + "Whispering: <" + playerChatting.getName() + "> " + ANSI_CYAN + message + " #" + ANSI_RESET);
+                }
+                msg = new ChatMessage("", playerChatting.getUniqueId().toString(), playerChatting.getName(), "whispering", receivers, message, System.currentTimeMillis());
+                dao.log(msg);
+                break;
 
 			case yelling4:
 				playerChatting.setFoodLevel(playerChatting.getFoodLevel() - hungercost4);
 				applicableDistance = (distanceForYelling / yellingfactor4);
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					try {
-						if (!player.equals(playerChatting)) {
-							double distance = playerChatting.getLocation().distance(player.getLocation());
-							if (distance < (applicableDistance * distanceForBreakingUpFactor)) {
-								player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
-							} else if (distance < applicableDistance) {
-								player.sendMessage(colorcodeincomingchatname
-										+ playerChatting.getDisplayName()
-										+ ": "
-										+ colorcodeincomingchat
-										+ Minions.obfuscateMessage(message, (distance - (applicableDistance * distanceForBreakingUpFactor))
-												/ (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)), codeincomingchat));
-							}
-						} else {
-							player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
-						}
-					} catch (IllegalArgumentException e) {
-
-					}
-				}
+				receivers = chatMessageHandler(playerChatting, message, applicableDistance);
+				if(isWindows) {
+                    realisticChat.getLogger().info("Yelling4: <" + playerChatting.getName() + "> " + message + " #");
+                } else {
+                    realisticChat.getLogger().info(ANSI_YELLOW + "Yelling4: <" + playerChatting.getName() + "> " + ANSI_CYAN + message + " #" + ANSI_RESET);
+                }
+                msg = new ChatMessage("", playerChatting.getUniqueId().toString(), playerChatting.getName(), "yelling4", receivers, message, System.currentTimeMillis());
+                dao.log(msg);
 				break;
 
 			case yelling3:
 				playerChatting.setFoodLevel(playerChatting.getFoodLevel() - hungercost3);
 				applicableDistance = (distanceForYelling / yellingfactor3);
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					try {
-						if (!player.equals(playerChatting)) {
-							double distance = playerChatting.getLocation().distance(player.getLocation());
-							if (distance < (applicableDistance * distanceForBreakingUpFactor)) {
-								player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
-							} else if (distance < applicableDistance) {
-								player.sendMessage(colorcodeincomingchatname
-										+ playerChatting.getDisplayName()
-										+ ": "
-										+ colorcodeincomingchat
-										+ Minions.obfuscateMessage(message, (distance - (applicableDistance * distanceForBreakingUpFactor))
-												/ (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)), codeincomingchat));
-							}
-						} else {
-							player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
-						}
-					} catch (IllegalArgumentException e) {
-
-					}
-				}
+				receivers = chatMessageHandler(playerChatting, message, applicableDistance);
+				if (isWindows) {
+                    realisticChat.getLogger().info("Yelling3: <" + playerChatting.getName() + "> " + message + " #");
+                } else {
+                    realisticChat.getLogger().info(ANSI_YELLOW + "Yelling3: <" + playerChatting.getName() + "> " + ANSI_CYAN + message + " #" + ANSI_RESET);
+                }
+                msg = new ChatMessage("", playerChatting.getUniqueId().toString(), playerChatting.getName(), "yelling3", receivers, message, System.currentTimeMillis());
+                dao.log(msg);
 				break;
 
 			case yelling2:
 				playerChatting.setFoodLevel(playerChatting.getFoodLevel() - hungercost2);
 				applicableDistance = (distanceForYelling / yellingfactor2);
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					try {
-						if (!player.equals(playerChatting)) {
-							double distance = playerChatting.getLocation().distance(player.getLocation());
-							if (distance < ((distanceForYelling / yellingfactor2) * distanceForBreakingUpFactor)) {
-								player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
-							} else if (distance < applicableDistance) {
-								player.sendMessage(colorcodeincomingchatname
-										+ playerChatting.getDisplayName()
-										+ ": "
-										+ colorcodeincomingchat
-										+ Minions.obfuscateMessage(message, (distance - (applicableDistance * distanceForBreakingUpFactor))
-												/ (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)), codeincomingchat));
-							}
-						} else {
-							player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
-						}
-					} catch (IllegalArgumentException e) {
-
-					}
-				}
+				receivers = chatMessageHandler(playerChatting, message, applicableDistance);
+				if (isWindows) {
+                    realisticChat.getLogger().info("Yelling2: <" + playerChatting.getName() + "> " + message + " #");
+                } else {
+                    realisticChat.getLogger().info(ANSI_YELLOW + "Yelling2: <" + playerChatting.getName() + "> " + ANSI_CYAN + message + " #" + ANSI_RESET);
+                }
+                msg = new ChatMessage("", playerChatting.getUniqueId().toString(), playerChatting.getName(), "yelling2", receivers, message, System.currentTimeMillis());
+                dao.log(msg);
 				break;
 
 			case yelling1:
 				playerChatting.setFoodLevel(playerChatting.getFoodLevel() - hungercost1);
 				applicableDistance = (distanceForYelling / yellingfactor1);
-				for (Player player : Bukkit.getOnlinePlayers()) {
-					try {
-						if (!player.equals(playerChatting)) {
-							double distance = playerChatting.getLocation().distance(player.getLocation());
-							if (distance < (applicableDistance * distanceForBreakingUpFactor)) {
-								player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
-							} else if (distance < applicableDistance) {
-								player.sendMessage(colorcodeincomingchatname
-										+ playerChatting.getDisplayName()
-										+ ": "
-										+ colorcodeincomingchat
-										+ Minions.obfuscateMessage(message, (distance - (applicableDistance * distanceForBreakingUpFactor))
-												/ (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)), codeincomingchat));
-							}
-						} else {
-							player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
-						}
-					} catch (IllegalArgumentException e) {
-
-					}
-				}
-				break;
+				receivers = chatMessageHandler(playerChatting, message, applicableDistance);
+				if (isWindows) {
+                    realisticChat.getLogger().info("Yelling1: <" + playerChatting.getName() + "> " + message + " #");
+                } else {
+                    realisticChat.getLogger().info(ANSI_YELLOW + "Yelling1: <" + playerChatting.getName() + "> " + ANSI_CYAN + message + " #" + ANSI_RESET);
+                }
+                msg = new ChatMessage("", playerChatting.getUniqueId().toString(), playerChatting.getName(), "yelling1", receivers, message, System.currentTimeMillis());
+                dao.log(msg);
+                break;
 		}
 	}
 
@@ -525,26 +449,26 @@ public class RealisticChatListener implements Listener {
 				Location place = relevantPlayer.getLocation();
 				Location towerLocation = ctManager.findClosestTower(place);
 				if (towerLocation == null) {
-					for (conversationWaiter waiter : waitingList) {
+					for (ConversationWaiter waiter : waitingList) {
 						if (waiter.playerBeingCalled.equals(relevantPlayer)) {
 							waitingList.remove(waiter);
 							break;
 						}
 					}
-					relevantPlayer.sendMessage(colorcode + message_notConnectedToTheNetwork);
+					relevantPlayer.sendMessage(colorcode + messageNotConnectedToTheNetwork);
 					return;
 				} else if (ctManager.getTower(towerLocation).getNormalizedReceptionPower(place) <= 0) {
-					for (conversationWaiter waiter : waitingList) {
+					for (ConversationWaiter waiter : waitingList) {
 						if (waiter.playerBeingCalled.equals(relevantPlayer)) {
 							waitingList.remove(waiter);
 							break;
 						}
 					}
-					relevantPlayer.sendMessage(colorcode + message_notConnectedToTheNetwork);
+					relevantPlayer.sendMessage(colorcode + messageNotConnectedToTheNetwork);
 					return;
 				}
 			}
-			for (conversationWaiter waiter : waitingList) {
+			for (final ConversationWaiter waiter : waitingList) {
 				if (waiter.playerBeingCalled.equals(relevantPlayer)) {
 					for (Conversation conversations : Conversation.conversations) {
 						if (waiter.caller.equals(conversations.caller)) {
@@ -554,7 +478,7 @@ public class RealisticChatListener implements Listener {
 							break;
 						}
 					}
-					if (conversationsExists == true) {
+					if (conversationsExists) {
 						break;
 					} else {
 						new Conversation(waiter.caller, waiter.playerBeingCalled);
@@ -563,20 +487,18 @@ public class RealisticChatListener implements Listener {
 				}
 			}
 		} else {
-			for (conversationWaiter waiter : waitingList) {
+			for (ConversationWaiter waiter : waitingList) {
 				if (waiter.caller.equals(relevantPlayer)) {
-					waiter.caller.sendMessage(colorcode + message_waiterHasEndedCaller);
-					waiter.playerBeingCalled.sendMessage(colorcode + message_waiterHasEndedCalled);
+					waiter.caller.sendMessage(colorcode + messageWaiterHasEndedCaller);
+					waiter.playerBeingCalled.sendMessage(colorcode + messageWaiterHasEndedCalled);
 					waitingList.remove(waiter);
 				}
 			}
 			for (Conversation conversations : Conversation.conversations) {
 				if (conversations.containsPlayer(relevantPlayer)) {
-					if (phoneValidator(relevantPlayer.getInventory().getItem(slot))) {
-						// Do nothing
-					} else {
-						conversations.removePlayerFromConversation(relevantPlayer);
-						break;
+					if (!phoneValidator(relevantPlayer.getInventory().getItem(slot))) {
+					    conversations.removePlayerFromConversation(relevantPlayer);
+                        break;
 					}
 
 				}
@@ -588,10 +510,10 @@ public class RealisticChatListener implements Listener {
 	public void onPlayerItemDrop(PlayerDropItemEvent event) {
 		Player relevantPlayer = event.getPlayer();
 		if (phoneValidator(event.getItemDrop().getItemStack())) {
-			for (conversationWaiter waiter : waitingList) {
+			for (ConversationWaiter waiter : waitingList) {
 				if (waiter.caller.equals(relevantPlayer)) {
-					waiter.caller.sendMessage(colorcode + message_waiterHasEndedCaller);
-					waiter.playerBeingCalled.sendMessage(colorcode + message_waiterHasEndedCalled);
+					waiter.caller.sendMessage(colorcode + messageWaiterHasEndedCaller);
+					waiter.playerBeingCalled.sendMessage(colorcode + messageWaiterHasEndedCalled);
 					waitingList.remove(waiter);
 				}
 			}
@@ -607,12 +529,12 @@ public class RealisticChatListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player relevantPlayer = event.getPlayer();
-		for (conversationWaiter waiter : waitingList) {
+		for (ConversationWaiter waiter : waitingList) {
 			if (waiter.caller.equals(relevantPlayer)) {
-				waiter.playerBeingCalled.sendMessage(colorcode + message_waiterHasEndedCalled);
+				waiter.playerBeingCalled.sendMessage(colorcode + messageWaiterHasEndedCalled);
 				waitingList.remove(waiter);
 			} else if (waiter.playerBeingCalled.equals(relevantPlayer)) {
-				waiter.caller.sendMessage(colorcode + waiter.playerBeingCalled.getDisplayName() + colorcode + message_waiterHasEndedCalledDisconnected);
+				waiter.caller.sendMessage(colorcode + waiter.playerBeingCalled.getDisplayName() + colorcode + messageWaiterHasEndedCalledDisconnected);
 				waitingList.remove(waiter);
 			}
 		}
@@ -625,13 +547,13 @@ public class RealisticChatListener implements Listener {
 	}
 
 	/**
-	 * Checks if an item is a phone
+	 * Checks if an item is a phone.
 	 * 
 	 * @return value - returns false if not a phone, else true
 	 */
-	public boolean phoneValidator(ItemStack item) {
+	public boolean phoneValidator(final ItemStack item) {
 		try {
-			if (isLoreOn == false) {
+			if (!isLoreOn) {
 				if (item.getType().equals(clock)) {
 					return true;
 				} else {
@@ -640,7 +562,7 @@ public class RealisticChatListener implements Listener {
 			} else {
 				if (item.getType().equals(clock)) {
 					if (item.getItemMeta().hasDisplayName()) {
-						if (item.getItemMeta().getDisplayName().equals(loreItemName_Phone)) {
+						if (item.getItemMeta().getDisplayName().equals(loreItemNamePhone)) {
 							return true;
 						} else {
 							return false;
@@ -657,7 +579,7 @@ public class RealisticChatListener implements Listener {
 		}
 	}
 
-	private ChatPossibilities realisticMessageInterpreter(String message) {
+	private ChatPossibilities realisticMessageInterpreter(final String message) {
 		if (message.equals("")) {
 			return ChatPossibilities.normalTalking;
 		} else if (message.endsWith("!!!!")) {
@@ -679,11 +601,48 @@ public class RealisticChatListener implements Listener {
 		yelling1, yelling2, yelling3, yelling4, normalTalking, whispering
 	}
 
-	private class conversationWaiter {
+	/**
+     * Handles the sending of messages for ranged chat and returns a list of receivers as a string seperated by whitespace.
+     * 
+     * @param playerChatting - The player trying to chat.
+     * @param message - The message.
+     * @param applicableDistance - The Distance this chat should be heard.
+     * 
+     * @return receivers - everyone who heard.
+     */
+	private String chatMessageHandler(Player playerChatting, String message, double applicableDistance)
+	{
+	    StringBuilder receivers = new StringBuilder();
+	    for (Player player : Bukkit.getOnlinePlayers()) {
+            try {
+                if (!player.equals(playerChatting)) {
+                    double distance = playerChatting.getLocation().distance(player.getLocation());
+                    if (distance < (applicableDistance * distanceForBreakingUpFactor)) {
+                        player.sendMessage(colorcodeincomingchatname + playerChatting.getDisplayName() + ": " + colorcodeincomingchat + message);
+                        receivers.append(player.getDisplayName() + " ");
+                    } else if (distance < applicableDistance) {
+                        player.sendMessage(colorcodeincomingchatname
+                                + playerChatting.getDisplayName()
+                                + ": "
+                                + colorcodeincomingchat
+                                + Minions.obfuscateMessage(message, (distance - (applicableDistance * distanceForBreakingUpFactor))
+                                        / (applicableDistance - (applicableDistance * distanceForBreakingUpFactor)), codeincomingchat));
+                        receivers.append(player.getDisplayName() + " ");
+                    }
+                } else {
+                    player.sendMessage(colorcodeoutgoingchatname + playerChatting.getDisplayName() + ": " + colorcodeoutgoingchat + message);
+                }
+            } catch (IllegalArgumentException e) {
+
+            }
+        }
+        return receivers.toString();	    
+	}
+	private class ConversationWaiter {
 		public Player caller;
 		public Player playerBeingCalled;
 
-		conversationWaiter(Player caller, Player playerBeingCalled) {
+		ConversationWaiter(Player caller, Player playerBeingCalled) {
 			this.caller = caller;
 			this.playerBeingCalled = playerBeingCalled;
 		}

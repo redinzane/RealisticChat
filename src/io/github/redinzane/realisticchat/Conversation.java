@@ -1,6 +1,7 @@
 package io.github.redinzane.realisticchat;
 
 import java.util.LinkedList;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -11,6 +12,7 @@ public class Conversation {
 	int playercounter;
 	long timeStarted;
 	boolean isConversationValid = false;
+	String uuid;
 
 	static String colorcode;
 	static String message_Disconnect;
@@ -20,8 +22,7 @@ public class Conversation {
 	static int maxPlayercount;
 
 	/**
-	 * Creates a Conversation and automatically adds it to the list of
-	 * conversations
+	 * Creates a Conversation and automatically adds it to the list of conversations.
 	 * 
 	 * @param caller
 	 *            - the caller
@@ -34,15 +35,17 @@ public class Conversation {
 		this.playersInConversation.add(called);
 		this.playercounter = 2;
 		this.timeStarted = System.currentTimeMillis();
+		this.uuid = UUID.randomUUID().toString();
 		isConversationValid = true;
 		String establishingMessage = colorcode + message_ConversationEstablished + caller.getDisplayName() + colorcode + " and " + called.getDisplayName() + colorcode;
 		caller.sendMessage(establishingMessage);
 		called.sendMessage(establishingMessage);
 		conversations.add(this);
+		
 	}
 
 	/**
-	 * Adds a player to the conversation
+	 * Adds a player to the conversation.
 	 * 
 	 * @return value - returns false if maximum reached, else true
 	 */
@@ -68,8 +71,7 @@ public class Conversation {
 	}
 
 	/**
-	 * Removes a player from the conversation Check if the conversation is valid
-	 * afterwards
+	 * Removes a player from the conversation Check if the conversation is valid afterwards.
 	 * 
 	 * @return value - returns false if failed, else true
 	 */
@@ -100,7 +102,7 @@ public class Conversation {
 	}
 
 	/**
-	 * Removes this conversation from existence, hopefully
+	 * Removes this conversation from existence, hopefully.
 	 * 
 	 * @return value - returns false if failed, else true
 	 */
@@ -117,8 +119,7 @@ public class Conversation {
 	}
 
 	/**
-	 * Returns an array containing all players in the conversation including the
-	 * caller
+	 * Returns an array containing all players in the conversation including the caller.
 	 * 
 	 * @return value - returns an array of players
 	 */
@@ -133,7 +134,7 @@ public class Conversation {
 	}
 
 	/**
-	 * Checks if player is in conversation
+	 * Checks if player is in conversation.
 	 * 
 	 * @return value - returns false if player is not in conversation, else true
 	 */

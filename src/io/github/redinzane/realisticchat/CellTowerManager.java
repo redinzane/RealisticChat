@@ -1,5 +1,7 @@
 package io.github.redinzane.realisticchat;
 
+import io.github.redinzane.realisticchat.minions.Minions;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -38,15 +40,15 @@ public class CellTowerManager implements Listener, Runnable {
 
 		String baseBlock = config.getBaseBlock();
 		if (Material.getMaterial(baseBlock) != null) {
-			CellTower.BASE_BLOCK = Material.getMaterial(baseBlock);
+			CellTower.baseBlock = Material.getMaterial(baseBlock);
 		}
 		int minHeight = config.getCTMinHeight();
 		int maxHeight = config.getCTMaxHeight();
 		if (maxHeight > minHeight) {
-			CellTower.MIN_HEIGHT = minHeight;
-			CellTower.MAX_HEIGHT = maxHeight;
+			CellTower.minHeight = minHeight;
+			CellTower.maxHeight = maxHeight;
 		}
-		CellTower.MAX_RANGE = config.getCTMaxRange();
+		CellTower.maximumRange = config.getCTMaxRange();
 
 	}
 
@@ -76,7 +78,7 @@ public class CellTowerManager implements Listener, Runnable {
 	public void blockPlaced(BlockPlaceEvent event) {
 		Block block = event.getBlockPlaced();
 		Location location = block.getLocation();
-		if (block.getType().equals(CellTower.BASE_BLOCK)) {
+		if (block.getType().equals(CellTower.baseBlock)) {
 			registerTower(location);
 		} else if (block.getType().equals(Material.IRON_FENCE)) {
 			for (int i = 0; i < MAX_BLOCKCHECK; i++) {
@@ -85,14 +87,14 @@ public class CellTowerManager implements Listener, Runnable {
 					break;
 				}
 			}
-			if (location.getBlock().getType().equals(CellTower.BASE_BLOCK)) {
+			if (location.getBlock().getType().equals(CellTower.baseBlock)) {
 				registerTower(location);
 			}
 
 		} else if (block.getType().equals(Material.REDSTONE_TORCH_ON) || block.getType().equals(Material.REDSTONE_TORCH_OFF)) {
 			RedstoneTorch torch = (RedstoneTorch) block.getState().getData();
 			location.add(torch.getAttachedFace().getModX(), torch.getAttachedFace().getModY(), torch.getAttachedFace().getModZ());
-			if (location.getBlock().getType().equals(CellTower.BASE_BLOCK)) {
+			if (location.getBlock().getType().equals(CellTower.baseBlock)) {
 				registerTower(location);
 			}
 		}
@@ -109,13 +111,13 @@ public class CellTowerManager implements Listener, Runnable {
 			Location place = player.getLocation();
 			Location location = findClosestTower(place);
 			if (location == null) {
-				player.sendMessage(RCListener.colorcode + RCListener.message_notConnectedToTheNetwork);
+				player.sendMessage(RCListener.colorcode + RCListener.messageNotConnectedToTheNetwork);
 				return;
 			}
 			CellTower closestTower = getTower(location);
 			double reception = closestTower.getNormalizedReceptionPower(place);
 			if (reception <= 0) {
-				player.sendMessage(RCListener.colorcode + RCListener.message_notConnectedToTheNetwork);
+				player.sendMessage(RCListener.colorcode + RCListener.messageNotConnectedToTheNetwork);
 				return;
 			}
 			double power = closestTower.getAntennaGain() * reception;

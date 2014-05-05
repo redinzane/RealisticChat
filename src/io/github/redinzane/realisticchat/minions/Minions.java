@@ -1,4 +1,4 @@
-package io.github.redinzane.realisticchat;
+package io.github.redinzane.realisticchat.minions;
 
 import org.bukkit.ChatColor;
 
@@ -29,7 +29,7 @@ public class Minions {
 	}
 
 	/**
-	 * Obfuscates a message depending on a scale
+	 * Obfuscates a message depending on a scale.
 	 * 
 	 * @param message
 	 *            message to obfuscate
@@ -81,7 +81,7 @@ public class Minions {
 		return String.format("%1.2fdBm", db);
 	}
 
-	public static String sha256(String base) {
+	public static String sha256(final String base) {
 		try {
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
 			byte[] hash = digest.digest(base.getBytes("UTF-8"));

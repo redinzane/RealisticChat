@@ -7,14 +7,11 @@ import org.bukkit.block.Block;
 
 public class CellTower {
 	// Static Stuff
-	protected static int MIN_HEIGHT = 1;
-	protected static int MAX_HEIGHT = 2;
-	protected static int MAX_RANGE;
-	protected static Material BASE_BLOCK = Material.getMaterial("NOTE_BLOCK");
-	private static final int MAX_POWER = 180000; // 180kW, power of a big radio
-													// tower in Switzerland. Not
-													// an ideal reference, but
-													// eh
+	protected static int minHeight = 1;
+	protected static int maxHeight = 2;
+	protected static int maximumRange;
+	protected static Material baseBlock = Material.getMaterial("NOTE_BLOCK");
+	private static final int MAX_POWER = 180000; // 180kW, power of a big radio tower in Switzerland. Not an ideal reference, but eh
 
 	private static final int ALPHA = 100; // Magic value
 
@@ -35,9 +32,12 @@ public class CellTower {
 		if (location == null) {
 			return false;
 		}
+		if (location.getWorld() == null) {
+            return false;
+        }
 		int WORLD_HEIGHT = location.getWorld().getMaxHeight();
 		// check if base is correct
-		if (!location.getBlock().getType().equals(BASE_BLOCK)) {
+		if (!location.getBlock().getType().equals(baseBlock)) {
 			return false;
 		}
 		boolean hasRedstoneTorch = false;
@@ -60,7 +60,7 @@ public class CellTower {
 		Location base = location.clone(); // start of the antenna
 		int height = calculateHeight(base, WORLD_HEIGHT);
 		base.add(0, height + 1, 0);
-		if (height < MIN_HEIGHT) {
+		if (height < minHeight) {
 			return false; // antenna not high enough
 		}
 		while (base.getBlock().getType().equals(Material.AIR)) {
@@ -75,7 +75,7 @@ public class CellTower {
 	private static int calculateHeight(Location location, int WORLD_HEIGHT) {
 		Location base = location.clone().add(0, 1, 0); // start of the antenna
 		int height = 0;
-		for (int i = 0; i < MAX_HEIGHT && base.getY() < WORLD_HEIGHT; i++) {
+		for (int i = 0; i < maxHeight && base.getY() < WORLD_HEIGHT; i++) {
 			if (base.getBlock().getType().equals(Material.IRON_FENCE)) {
 				height++;
 			} else {
@@ -98,11 +98,11 @@ public class CellTower {
 	}
 
 	private void calculateRange(int height) {
-		double linFactor = ((height) / ((double) MAX_HEIGHT));
+		double linFactor = ((height) / ((double) maxHeight));
 		if (linFactor < 0) {
 			linFactor = 0;
 		}
-		int range = (int) (MAX_RANGE * linFactor);
+		int range = (int) (maximumRange * linFactor);
 		this.antennaGain = linFactor * MAX_POWER;
 		if (range < 0) {
 			range = 0;
@@ -134,7 +134,7 @@ public class CellTower {
 			return 0; // tower off?
 		}
 		double distance = this.location.distance(location);
-		if (distance > MAX_RANGE) {
+		if (distance > maximumRange) {
 			return 0;
 		}
 		return inversePowerLaw(distance);
