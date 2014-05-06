@@ -46,12 +46,12 @@ The antenna can be shut down with Redstone power.
 Right-Click with a phone to show whether you are connected or not. It will let you know if you are not connected every time something would happen if you were though.
 
 ### Some bonus features:
-- Automatically saves towers to a file asynchronously.
-- Consistent checks of a tower's validity minimize glitching.
-- The order the tower is built does not matter.
-- Towers show an effect upon validation, providing instant feedback.
-- Signal strength is realistically based on distance to tower (thanks Thomas).
-- No external dependencies.
-- Colored console output on non-Windows systems.
-- Configurability of the color of all messages and the text of 99%.
-- All features individually customizable and deactivatable.
+-Automatically saves towers to a file asynchronously.
+-Consistent checks of a tower's validity minimize glitching.
+-The order the tower is built does not matter.
+-Towers show an effect upon validation, providing instant feedback.
+-Signal strength is realistically based on distance to tower (thanks Thomas).
+-No external dependencies.
+-Colored console output on non-Windows systems.
+-Configurability of the color of all messages and the text of 99%.
+-All features individually customizable and deactivatable.
