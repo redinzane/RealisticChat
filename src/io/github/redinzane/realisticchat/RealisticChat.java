@@ -54,6 +54,7 @@ public class RealisticChat extends JavaPlugin {
     public void installDDL() {
         super.installDDL();
     }
+    
     public void pruneDatabase() {
         dao.pruneDatabase();
     }

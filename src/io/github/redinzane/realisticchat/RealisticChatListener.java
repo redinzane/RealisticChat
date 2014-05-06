@@ -90,6 +90,7 @@ public class RealisticChatListener implements Listener {
 
 	RealisticChatListener(RealisticChat plugin, RealisticChatDAO rcDAO, RealisticChatConfiguration config) {
 		this.realisticChat = plugin;
+		this.dao = rcDAO;
 		this.distanceForWhispering = config.getDistanceForWhispering();
 		this.distanceForYelling = config.getDistanceForYelling();
 		this.yellingfactor1 = config.getDistanceForYelling1();

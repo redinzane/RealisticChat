@@ -12,7 +12,6 @@ import com.avaje.ebean.Query;
 public class RealisticChatDAO {
     
     private static final long ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
-    private static final long ZERO = 0;
     private RealisticChat plugin;
     private EbeanServer db;
 
@@ -35,26 +34,9 @@ public class RealisticChatDAO {
             db.save(msg);
         }
     }
-
-    public ChatMessage findByCUUID(String UUID) {
-        Query<ChatMessage> query = find().where().eq("cUUID", UUID).query();
-        try {
-            return query.findUnique();
-        } catch (PersistenceException e) {
-            return null;
-        }
-    }
-    public ChatMessage findByPUUID(String UUID) {
-        Query<ChatMessage> query = find().where().eq("pUUID", UUID).query();
-        try {
-            return query.findUnique();
-        } catch (PersistenceException e) {
-            return null;
-        }
-    }
     
     public void pruneDatabase() {
-        Query<ChatMessage> query = find().where().between("timestamp", ZERO, System.currentTimeMillis()-ONE_WEEK).query();
+        Query<ChatMessage> query = find().where().lt("timestamp", System.currentTimeMillis()-ONE_WEEK).query();
         remove(query.findList());
     }
     

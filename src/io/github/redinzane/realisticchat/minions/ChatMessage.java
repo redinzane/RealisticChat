@@ -15,7 +15,7 @@ public class ChatMessage {
     @Column(name = "pUUID")
     String playerUUID;
     @Column(name = "name")
-    String name;
+    String playerName;
     @Column(name = "type")
     String typeOfChat;
     @Column(name = "receivers")
@@ -25,9 +25,24 @@ public class ChatMessage {
     @Column(name = "timestamp")
     long timestamp;
     
+    public ChatMessage() {
+        
+    }
+    /**
+     * ChatMessage Object for database logging.
+     * 
+     * @param cUUID
+     * @param pUUID
+     * @param player
+     * @param type
+     * @param receiver
+     * @param msg
+     * @param time
+     */
     public ChatMessage(String cUUID, String pUUID, String player, String type, String receiver, String msg, long time) {
         this.conversationUUID = cUUID;
         this.playerUUID = pUUID;
+        this.playerName = player;
         this.typeOfChat = type;
         this.receivers = receiver;
         this.message = msg;
@@ -46,10 +61,10 @@ public class ChatMessage {
     public void setId(int id) {
         this.id = id;
     }
-    public String getConversatinoUUID() {
+    public String getConversationUUID() {
         return conversationUUID;
     }
-    public void setConversatioUUID(String conversationUUID) {
+    public void setConversationUUID(String conversationUUID) {
         this.conversationUUID = conversationUUID;
     }
     public String getPlayerUUID() {
@@ -57,6 +72,12 @@ public class ChatMessage {
     }
     public void setPlayerUUID(String playerUUID) {
         this.playerUUID = playerUUID;
+    }
+    public String getPlayerName() {
+        return playerName;
+    }
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
     }
     public String getTypeOfChat() {
         return typeOfChat;

@@ -150,7 +150,6 @@ public class CellTowerManager implements Listener, Runnable {
 	}
 
 	protected void saveTowers() {
-		RCListener.realisticChat.getLogger().info("Saving cell towers to disk in file: " + TOWERS_FILE);
 		Set<Location> towersToBeSaved = getTowerLocations();
 		writeCellTowersToFile(TOWERS_FILE, towersToBeSaved);
 	}
@@ -212,14 +211,15 @@ public class CellTowerManager implements Listener, Runnable {
 					location = new Location(world, x, y, z);
 					towers.add(location);
 				} catch (Exception e) {
-					RCListener.realisticChat.getLogger().warning("couldn't read line <" + line + "> in towers file");
+					RCListener.realisticChat.getLogger().warning("Couldn't read line <" + line + "> in towers file.");
 				}
 
 			}
+			br.close();
 		} catch (FileNotFoundException e) {
-			RCListener.realisticChat.getLogger().warning("no input file found!");
+			RCListener.realisticChat.getLogger().warning("No input file found!");
 		} catch (IOException e) {
-			RCListener.realisticChat.getLogger().warning("can't read input file");
+			RCListener.realisticChat.getLogger().warning("Can't read input file.");
 		}
 		return towers;
 	}
