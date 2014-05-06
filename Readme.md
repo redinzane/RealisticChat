@@ -4,21 +4,19 @@ RealisticChat
 A Plugin that changes the way Minecraft's chat works to something more realistic.
 
 
-**Author:** Moritz Schwab (with some help and contribution by Thomas Richner).
+**Author:** Moritz Schwab (with some help and contribution by Thomas Richner. This file is also inspired by his work).
 
 **License:** [GNU General Public License, version 3 (GPL-3.0)](http://opensource.org/licenses/gpl-3.0)
-
-Credit to redinzane for the configuration file handling.
 
 ### How to install:
 
 Build it or get a release from here or dev.bukkit, drop into Bukkit's plugin directory.
 
 ###Features
--Ranged chat featuring talking, whispering and 4 kinds of yelling, all with configurable ranges and in the case of yelling, configurable hunger cost.
--A cell phone system, allowing players to communicate over long distances using a clock item (optionally with a configurable name), featuring conference calls of configurable size.
--Cell towers (optional), of configurable range and required height, with configurable base blocks.
--Database logging and console output of all chat. Database is laid out as follows: A conversation UUID to identify unique cell conversations, player UUID of the player chatting, their name, the type of chat, everyone who heard, the message and a timestamp.
+- Ranged chat featuring talking, whispering and 4 kinds of yelling, all with configurable ranges and in the case of yelling, configurable hunger cost.
+- A cell phone system, allowing players to communicate over long distances using a clock item (optionally with a configurable name), featuring conference calls of configurable size.
+- Cell towers (optional), of configurable range and required height, with configurable base blocks.
+- Database logging and console output of all chat. Database is laid out as follows: A conversation UUID to identify unique cell conversations, player UUID of the player chatting, their name, the type of chat, everyone who heard, the message and a timestamp.
 
 ### How to build a cell tower:
 
@@ -46,12 +44,17 @@ The antenna can be shut down with Redstone power.
 Right-Click with a phone to show whether you are connected or not. It will let you know if you are not connected every time something would happen if you were though.
 
 ### Some bonus features:
--Automatically saves towers to a file asynchronously.
--Consistent checks of a tower's validity minimize glitching.
--The order the tower is built does not matter.
--Towers show an effect upon validation, providing instant feedback.
--Signal strength is realistically based on distance to tower (thanks Thomas).
--No external dependencies.
--Colored console output on non-Windows systems.
--Configurability of the color of all messages and the text of 99%.
--All features individually customizable and deactivatable.
+- Automatically saves towers to a file asynchronously.
+- Consistent checks of a tower's validity minimize glitching.
+- The order the tower is built does not matter.
+- Towers show an effect upon validation, providing instant feedback.
+- Signal strength is realistically based on distance to tower (thanks Thomas).
+- No external dependencies.
+- Colored console output on non-Windows systems.
+- Configurability of the color of all messages and the text of 99%.
+- All features individually customizable and deactivatable.
+
+### Recommendations:
+- Thomas Richner's RadioTowerPlugin to add some radio towers.
+- My own PlayerHider to add some realism to Line of Sight.
+- Thomas Richner's Bed Nerf, to nerf beds to be used less (based on earlier plugins by him and me).
