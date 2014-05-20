@@ -484,6 +484,7 @@ public class RealisticChatListener implements Listener {
 					} else {
 						new Conversation(waiter.caller, waiter.playerBeingCalled);
 						waitingList.remove(waiter);
+						break;
 					}
 				}
 			}
@@ -493,6 +494,7 @@ public class RealisticChatListener implements Listener {
 					waiter.caller.sendMessage(colorcode + messageWaiterHasEndedCaller);
 					waiter.playerBeingCalled.sendMessage(colorcode + messageWaiterHasEndedCalled);
 					waitingList.remove(waiter);
+					break;
 				}
 			}
 			for (Conversation conversations : Conversation.conversations) {
