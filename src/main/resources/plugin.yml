@@ -2,7 +2,7 @@ name: RealisticChat
 main: io.github.redinzane.realisticchat.RealisticChat
 version: 1.0
 load: postworld
-authors: [redinzane, killerofbanshees]
+authors: [redinzane]
 description: Ranged Chat, Cellphones, Console Logging, Cell Towers, Database of chat. Pretty awesome.
 softdepend: []
 loadbefore: []

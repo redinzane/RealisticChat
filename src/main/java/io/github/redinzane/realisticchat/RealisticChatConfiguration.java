@@ -31,6 +31,7 @@ public class RealisticChatConfiguration {
 	private static final String WAITERHASENDEDCALLER_KEY = "message_waiterHasEndedCaller";
 	private static final String WAITERHASENDEDCALLED_KEY = "message_waiterHasEndedCalled";
 	private static final String WAITERHASENDEDCALLEDDISCONNECTED_KEY = "message_waiterHasEndedCalledDisconnected";
+	private static final String NOTCONNECTEDTOTHENETWORK_KEY = "message_NotConnectedToTheNetwork";
 
 	private static final String DISCONNECT_KEY = "message_Disconnect";
 	private static final String CONVERSATIONESTABLISHED_KEY = "message_ConversationEstablished";
@@ -391,6 +392,20 @@ public class RealisticChatConfiguration {
 			return ChatColor.translateAlternateColorCodes(COLORCODE, value);
 		}
 	}
+	
+	/**
+     * Retrieve the Message.
+     * 
+     * @return Message including Colorcode
+     */
+    public String getNotConnectedToTheNetworkMessage() {
+        String value = getSectionOrDefault(SECTION_MESSAGES).getString(NOTCONNECTEDTOTHENETWORK_KEY);
+        if (value == null) {
+            return "";
+        } else {
+            return ChatColor.translateAlternateColorCodes(COLORCODE, value);
+        }
+    }
 
 	// Feature settings
 	/**

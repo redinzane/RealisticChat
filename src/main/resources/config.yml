@@ -47,3 +47,4 @@ messages:               # Use & for color codes
   message_ConversationEstablished: "Conversation established between:"
   message_PlayerAdded: " has entered the conversation."
   message_PlayerRemoved: " has left the conversation."
+  message_NotConnectedToTheNetwork: "You are not connected to the phone network."

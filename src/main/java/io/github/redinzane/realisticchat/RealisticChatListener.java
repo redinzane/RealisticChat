@@ -189,7 +189,7 @@ public class RealisticChatListener implements Listener {
 	public void onCellPhoneCall(CellPhoneCallEvent event) {
 		Player playerChatting = event.getPlayer();
 		final String message = event.getMessage();
-		Player[] onlinePlayers = Bukkit.getOnlinePlayers();
+		Player[] onlinePlayers = (Player[]) Bukkit.getOnlinePlayers().toArray();
 		List<Player> playersToSendToPhonecall = new ArrayList<Player>();
 		Conversation relevantConversation = null;
 		Player playerBeingCalled = null;
