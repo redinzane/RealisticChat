@@ -1,6 +1,6 @@
 name: RealisticChat
 main: io.github.redinzane.realisticchat.RealisticChat
-version: 1.0
+version: 1.0.1
 load: postworld
 authors: [redinzane]
 description: Ranged Chat, Cellphones, Console Logging, Cell Towers, Database of chat. Pretty awesome.

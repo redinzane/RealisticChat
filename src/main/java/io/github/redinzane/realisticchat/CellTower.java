@@ -59,17 +59,16 @@ public class CellTower {
 
 		Location base = location.clone(); // start of the antenna
 		int height = calculateHeight(base, WORLD_HEIGHT);
-		base.add(0, height + 1, 0);
+		base.add(0, height, 0);
 		if (height < minHeight) {
 			return false; // antenna not high enough
 		}
-		while (base.getBlock().getType().equals(Material.AIR)) {
-			base.add(0, 1, 0);
-		}
-		if (base.getY() != WORLD_HEIGHT) {
-			return false; // no sunlight
-		}
+		
+		if (!(base.getY()>= base.getWorld().getHighestBlockYAt(location))) {
+		    return false;
+	    }
 		return true;
+		
 	}
 
 	private static int calculateHeight(Location location, int WORLD_HEIGHT) {
