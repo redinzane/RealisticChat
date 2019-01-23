@@ -4,7 +4,7 @@ RealisticChat
 A Plugin that changes the way Minecraft's chat works to something more realistic.
 
 
-**Author:** Moritz Schwab (with some help and contribution by Thomas Richner. This file is also inspired by his work).
+**Author:** redinzane (with some help and contribution by Thomas Richner. This file is also inspired by his work).
 
 **License:** [GNU General Public License, version 3 (GPL-3.0)](http://opensource.org/licenses/gpl-3.0)
 
